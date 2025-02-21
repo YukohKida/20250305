@@ -695,6 +695,7 @@
                 trial.data = {
                     demo_nasa_rtlx_data: thirdLastData?.demo_data ?? 9,
                     nasa_rtlx_data: thirdLastData?.experiment_data ?? 9,
+                    reaction_time: thirdLastData?.reaction_time ?? 'NA',
                     mode: mode // **デモ or 本番を記録**
                 };
             },
@@ -2438,7 +2439,7 @@
     const save_data = {
         type: jsPsychPipe,
         action: 'save',
-        experiment_id: 'GRNyxL1DwJxQ',
+        experiment_id: '2xDqhflOiUKP',
         filename: filename,
         data_string: () => jsPsych.data.get().csv()
     };
@@ -2454,7 +2455,7 @@
     const opening_timeline = {
         timeline: [
             hello_instructions,
-            device_check,
+            // device_check,
             experiment_instructions
         ]
     };
