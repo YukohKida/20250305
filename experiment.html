@@ -2518,6 +2518,9 @@
     const save_data = {
         type: jsPsychPipe,
         action: 'save',
+        // 本番id
+        // experiment_id: 'GRNyxL1DwJxQ',
+        // テスト用id
         experiment_id: '2xDqhflOiUKP',
         filename: filename,
         data_string: () => jsPsych.data.get().csv()
@@ -2636,12 +2639,13 @@
     //     ending_timeline
     // ]);
 
+    // 実験開始期間前の教示
+    // 本番開始時、 "jsPsych.run" と "DataPipe の id" のコメントアウトをスイッチング
     const stop_trial = {
         type: jsPsychHtmlKeyboardResponse,
         stimulus: '申し訳ありません、まだ募集を開始していません。<br><br>開催日は<br>3/5 ~ 3/9<br>です。<br><br>' +
             '募集を開始しましたら、ぜひご参加ください。<br><br>'
     };
-
     jsPsych.run([
         stop_trial,
         stop_trial,
