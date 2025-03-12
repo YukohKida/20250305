@@ -411,6 +411,7 @@
     `,
         choices: ["次へ"],
         on_start: function (trial) {
+            jsPsych.getDisplayElement().innerHTML = ""; // **画面をクリア**
             trial.data = {
                 timestamp: new Date().toISOString()
             };
