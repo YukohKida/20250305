@@ -384,11 +384,9 @@
         </div>
     `,
         choices: ["次へ"],
-        on_start: function (trial) {
-            trial.data = {
-                timestamp: new Date().toISOString()
-            };
-        }
+        on_start: function () {
+            jsPsych.getDisplayElement().innerHTML = ""; // **画面をクリア**
+        },
     };
     
     // 実験開始の説明
