@@ -367,7 +367,30 @@
     `;
     }
 
+    // 実験開始の説明
+    const This_Experiment_was_ended = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+        <div class="instruction-container">
+            <h2>この実験は<br>既に終了した実験です</h2>
 
+            <div class="instruction-text">
+                <p>この実験は<br>2025/03/05~03/09<br>の間に実施した実験のアーカイブです。</p>
+            </div>
+
+            <div class="instruction-agreement">
+                <p>実験の体験を行う場合には<br><b>「次へ」</b>を押してください</p>
+            </div>
+        </div>
+    `,
+        choices: ["次へ"],
+        on_start: function (trial) {
+            trial.data = {
+                timestamp: new Date().toISOString()
+            };
+        }
+    };
+    
     // 実験開始の説明
     const hello_instructions = {
         type: jsPsychHtmlButtonResponse,
@@ -2519,7 +2542,8 @@
         type: jsPsychPipe,
         action: 'save',
         // // 本番id
-        // experiment_id: 'GRNyxL1DwJxQ',
+        // experiment_id: '　',
+        
         // テスト用id
         experiment_id: 'HxTduDNuSP3l',
         filename: filename,
@@ -2536,6 +2560,7 @@
     // 説明セクションのタイムライン
     const opening_timeline = {
         timeline: [
+            This_Experiment_was_ended,
             hello_instructions,
             device_check,
             experiment_instructions
@@ -2630,27 +2655,27 @@
         ]
     };
 
-    // // // jsPsychの実行
-    // jsPsych.run([
-    //     opening_timeline,
-    //     demo_timeline,
-    //     randomized_experiment_timeline,
-    //     survey_timeline,
-    //     ending_timeline
-    // ]);
-
-    // 実験開始期間前の教示
-    // 本番開始時、 "jsPsych.run" と "DataPipe の id" のコメントアウトをスイッチング
-    const stop_trial = {
-        type: jsPsychHtmlKeyboardResponse,
-        stimulus: '申し訳ありません、募集を終了しました。<br><br>開催日時は<br>3/5  9:00<br> ~ <br>3/9< 23:59 br>です。<br><br>' +
-            'また募集が開始しましたら、ぜひご参加ください。<br><br>'
-    };
+    // // jsPsychの実行
     jsPsych.run([
-        stop_trial,
-        stop_trial,
-        stop_trial
+        opening_timeline,
+        demo_timeline,
+        randomized_experiment_timeline,
+        survey_timeline,
+        ending_timeline
     ]);
+
+    // // 実験開始期間前の教示
+    // // 本番開始時、 "jsPsych.run" と "DataPipe の id" のコメントアウトをスイッチング
+    // const stop_trial = {
+    //     type: jsPsychHtmlKeyboardResponse,
+    //     stimulus: '申し訳ありません、募集を終了しました。<br><br>開催日時は<br>3/5  9:00<br> ~ <br>3/9< 23:59 br>です。<br><br>' +
+    //         'また募集が開始しましたら、ぜひご参加ください。<br><br>'
+    // };
+    // jsPsych.run([
+    //     stop_trial,
+    //     stop_trial,
+    //     stop_trial
+    // ]);
 
 </script>
 
