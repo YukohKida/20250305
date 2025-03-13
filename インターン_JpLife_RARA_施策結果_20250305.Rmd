@@ -1,0 +1,2875 @@
+---
+title: "インターン_JpLife_RARA_施策結果_20250305"
+author: "KIDA"
+date: "2025-03-05"
+
+output: 
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+    toc_depth: 2
+fontsize: 12pt
+geometry: margin=1in
+always_allow_html: true
+header-includes:
+  - \usepackage{fontspec}
+  - \setmainfont{BIZ UDPGothic}
+  - \setsansfont{BIZ UDPGothic}
+  - \setmonofont{BIZ UDPGothic}
+  - \usepackage{xeCJK}
+  - \setCJKmainfont{BIZ UDPGothic}
+  - \setCJKsansfont{BIZ UDPGothic}
+  - \setCJKmonofont{BIZ UDPGothic}
+  - \usepackage{ragged2e}
+  - \raggedright
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+Sys.setlocale("LC_CTYPE", "ja_JP.UTF-8")
+options(cli.unicode = TRUE)
+```
+
+# 概要
+
+本調査は、かんぽ生命と立命館大学の産学連携プロジェクトの一環として実施したインターンに
+おける研究であった。本インターンの目的は、サステナビリティ経営の推進に向けて、博
+士課程の学生が認知心理学の知見を活かした取り組みを行うことであった。
+調査では、より多くの人にとって使いやすいスマートフォン向けウェブデザインを検討す
+るため、グループ会社の社員の協力を得てオンライン実験を実施した。実験では、仮想の
+オンライン手続きを体験し、その使いやすさを評価するタスクを行った。
+
+# 調査方法
+
+対象者 : 郵政グループ内
+
+実施場所 : Web 上にて
+
+#### 実施期間
+
+2025年3月5日(水) 09:00 〜 3月9日(日) 23:59
+
+### 先行研究
+1. 加齢による情報処理の難易度上昇
+結合探索課題と加齢の研究：
+
+Plude DJ, Doussard-Roosevelt JA. Aging, selective attention, and feature
+  
+  integration. Psychol Aging. 1989 Mar;4(1):98-105. 
+
+  doi: 10.1037/0882-7974.4.1.98. PMID: 2803617.
+
+2. 加齢と情報の処理特性
+負のプライミング効果と加齢の研究：
+
+Shaw RJ. Age-related increases in the effects of automatic semantic activation.
+
+  Psychol Aging. 1991 Dec;6(4):595-604. doi: 10.1037//0882-7974.6.4.595. PMID: 1777148.
+
+### 予想した関係式
+
+オンライン手続きにかかるコスト = 年齢の影響 + 情報の表示方法の影響 + 誤差項
+
+### 仮説
+
+仮説1：加齢によってオンライン手続きに必要とするコストは悪化する
+仮説2：折り畳み表示によってオンライン手続きに必要とするコストは軽減される
+仮説3：折り畳み表示は年齢によるオンライン手続きの使い易さの改善量を増加させる
+
+### 実験で用いる仮説検定の帰無仮説
+
+仮説1：年齢による手続き時間、主観的手続き負荷に差はない
+仮説2：折り畳み表示による手続き時間、主観的手続き負荷に差はない
+仮説3：年齢による折りたたみ表示による手続き時間の改善量、主観的手続き負荷の改善
+          
+  量に差はない
+
+#### 実験デザイン
+
+2要因2水準の実験
+
+# 結果のまとめ
+
+### 今回の調査から言えること
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+実験実施後に記入
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+### 仮説検定の結果
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+実験実施後に記入
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+# 分析内容とコード
+
+コードの分類
+
+!!! = 分析前に実行が必要なコード
+
+## データの前処理
+
+### Rの整備
+
+#### !!! インストール !!!
+
+ここは環境にプラグインがインストールされていない場合にのみ実行が必要。
+実行するとオンラインからプラグインをDLする。
+
+```{r installPlugin, results='hide'}
+# install.packages("dplyr")
+# install.packages("ggplot2")
+# install.packages("curl")
+# install.packages("showtext")
+# install.packages("sysfonts")
+# install.packages("reshape2")
+# install.packages("tidyverse")
+# install.packages("tidyr")
+# install.packages("broom")
+# install.packages("minpack.lm")
+# install.packages("psych")
+# install.packages("ggpubr")
+# install.packages("kableExtra") # 表の装飾（オプション）
+# install.packages('GGally')
+# install.packages('car')  # 相関楕円を描画するために必要
+```
+
+#### !!! プラグインの有効化 !!!
+
+```{r, results='hide', message=FALSE}
+library("dplyr")
+library("ggplot2")
+library(showtext)
+library(sysfonts)
+library(reshape2)
+library("tidyverse")
+library("tidyr")
+library("broom")
+library(minpack.lm)
+library(ggcorrplot)
+library(psych)
+library(ggpubr)
+library(kableExtra) # 表の装飾（オプション）
+library(GGally)
+library(car)  # 相関楕円を描画するために必要
+```
+
+#### !!! フォントの読み込み !!!
+
+```{r, results='hide', message=FALSE}
+# 日本語フォントを追加
+# font_add_google("Noto Sans JP", "notosansjp")
+# font_add("hiragino", "/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc")
+
+font_add("biz_udpgothic", "/Library/Fonts/BIZUDPGothic-Regular.ttf")
+
+# フォントを有効にする
+showtext_auto()
+```
+
+#### !!! ggplot2 の APA テーマ作成 !!!
+
+```{r, results='hide', message=FALSE}
+# APAスタイル用テーマ
+apa_theme <- theme(
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  panel.background = element_blank(),
+  axis.line = element_line(color = "black"),
+# フォントBiz_udpgothicが入っていない場合
+# # 普通のグラフ
+#   plot.title = element_text(hjust = 0.5, face = "bold", size = 28,
+#                             family = "notosansjp"),
+#   axis.title = element_text(face = "bold", size = 24, family = "notosansjp"),
+#   axis.text = element_text(size = 20, family = "notosansjp"),
+# # Knitする時
+#   plot.title = element_text(hjust = 0.5, face = "bold", size = 14,
+#                             family = "notosansjp"),
+#   axis.title = element_text(face = "bold", size = 12, family = "notosansjp"),
+#   axis.text = element_text(size = 10, family = "notosansjp"),
+  
+# フォントBiz_udpgothicが入っている場合(Biz_udpgothicはフリーフォント)
+# 普通のグラフ
+  plot.title = element_text(hjust = 0.5, face = "bold", size = 28,
+                            family = "biz_udpgothic"),
+  axis.title = element_text(face = "bold", size = 24, family = "biz_udpgothic"),
+  axis.text = element_text(size = 20, family = "biz_udpgothic"),
+# # Knitする時
+#   plot.title = element_text(hjust = 0.5, face = "bold", size = 14,
+#                             family = "biz_udpgothic"),
+#   axis.title = element_text(face = "bold", size = 12, family = "biz_udpgothic"),
+#   axis.text = element_text(size = 10, family = "biz_udpgothic"),
+)
+```
+
+### !!! データ取り込み !!!
+
+"DataList" にデータを取り込む
+
+```{r, results='hide', message=FALSE}
+# ディレクトリ内の全 CSV ファイルを取得
+file_paths <- list.files("DataFile", pattern = "*.csv", full.names = TRUE)
+
+# CSV ファイルを読み込み、ファイル名（ID）を追加
+Datas <- lapply(file_paths, function(file) {
+  # CSVを読み込む
+  df <- read_csv(file)
+  # ファイル名から拡張子を除去
+  participant_id <- str_remove(basename(file), "\\.csv$")
+  # ID列を追加
+  df <- df %>% mutate(participant_id = participant_id)
+  return(df)
+})
+
+# リストをデータフレームに統合
+RawDataList <- bind_rows(Datas)
+```
+
+### データの基本的な整形
+
+#### !!! 不要な情報の削除 !!!
+
+必要なデータは
+
+<!--分析対象のデータ-->
+1. participant_id
+2. day
+3. width
+4. height
+5. response
+6. os
+7. clicked_text
+8. reaction_time
+<!--NASA-RTLX-->
+9. ental_demand
+10. physical_demand
+11. temporal_demand
+12. performance
+13. effort
+14. frustration
+<!--データの目印-->
+15. os_data
+16. demo_data
+17. experiment_data
+18. nasa_rtlx_data
+19. survey_data
+
+```{r, results='hide', message=FALSE}
+# ラベル表示
+colnames(RawDataList)
+
+DataList = RawDataList %>%
+  # 列を抽出して
+  select(
+    participant_id,
+    timestamp, response,
+    os,
+    clicked_text,
+    reaction_time,
+    os_data,
+    demo_data,
+    demo_nasa_rtlx_data,
+    experiment_data,
+    nasa_rtlx_data,
+    mental_demand,
+    physical_demand,
+    temporal_demand,
+    performance,
+    effort,
+    frustration,
+    survey_data) %>%
+  # 列を抽出して
+  filter(
+    # os_data != "null" |
+      demo_data != "null" |
+      experiment_data != "null"|
+      nasa_rtlx_data != "null" |
+      survey_data != "null") %>%
+  mutate(reaction_time = as.numeric(reaction_time),
+         mental_demand = as.numeric(mental_demand),
+         physical_demand = as.numeric(physical_demand),
+         temporal_demand = as.numeric(temporal_demand),
+         performance = as.numeric(performance),
+         effort = as.numeric(effort),
+         frustration = as.numeric(frustration),
+         ) %>%
+  group_by(participant_id)
+```
+
+#### !!! データの除外処置 !!!
+
+1. 年齢の外れ値
+2. 誤回答の除外
+
+```{r, results='hide', message=FALSE}
+# 年齢の外れ値
+## アンケートデータの抽出
+survey_d <- DataList %>%
+  filter(!is.na(survey_data)) %>%
+  select(participant_id, response, survey_data) %>%
+  pivot_wider(names_from = survey_data, values_from = response)
+
+extract_number <- function(x) {
+  as.numeric(gsub("[^0-9]+", "", x))
+}
+## `age` 列が存在する場合のみ処理
+if ("age" %in% colnames(survey_d)) {
+  survey_d <- survey_d %>%
+    mutate(age = ifelse(grepl('[^0-9]', age), extract_number(age),
+                        as.numeric(age)))
+}
+## 検出
+survey_d_filtered_age <- filter(survey_d, age >= 18 & age <= 80)
+valid_participant_ids <- survey_d_filtered_age %>% select(participant_id)
+## 除外
+### 1. 17歳以下と81歳以上を除外した参加者IDを取得
+valid_participant_ids <- survey_d_filtered_age %>% select(participant_id)
+### 2. DataList から対象年齢外の参加者を除外
+DataList <- DataList %>%
+  ### 3. `valid_participant_ids` に含まれている `participant_id` のみを残す
+  semi_join(valid_participant_ids, by = "participant_id")
+
+# 誤回答の除外
+# 正解項目リスト
+# exclude_items <- c(
+#   "図書館", "家庭ごみ", "資源とごみの収集カレンダー",
+#   "学校開放・学校施設の利用", "「住まいのガイドブック」を作成しました",
+#   "かつしか電子まっぷ", "小学校・中学校",
+#   "文書件名検索システム", "廃棄物・ごみ・リサイクル"
+# )
+exclude_items <- c(
+  "図書館", "家庭ごみ", "資源とごみの収集カレンダー",
+  "学校開放・学校施設の利用"
+)
+## 指定項目以外の participant_id を取得
+valid_participant_ids <- DataList %>%
+  filter(!clicked_text %in% exclude_items) %>%  # 指定項目を除外
+  distinct(participant_id) %>%  # 重複を削除
+  arrange(participant_id)  # ソート（任意）
+### DataList から対象回答外の参加者を除外
+DataList <- DataList %>%
+  ### 3. `valid_participant_ids` に含まれている `participant_id` のみを残す
+  semi_join(valid_participant_ids, by = "participant_id")
+
+
+# 誤回答データの除外
+
+# # 最後まで実験を行ったデータ以外を除外(今回は試行数74を基準)
+# DataList = DataList %>%
+#   filter(length(participant_id) == 74)
+# 
+# # 実験日以外に行ったデータを検出(今回は'2024-07-09')
+# table(as.Date(DataList$recorded_at))
+# # 実験日以外に行ったデータを除外
+# DataList = DataList %>%
+#   filter(as.Date(timestamp) == '2024-07-09')
+# 
+# # 重複者の有無を検出(今回は重複者1名)
+# table(table(DataList$participant_id))
+```
+
+
+
+
+
+## 0. 基本統計
+
+### 0.1. 参加者属性
+
+#### 0.1.0. データの抽出
+
+```{r, results='hide', message=FALSE}
+# アンケートデータの抽出
+survey_d <- DataList %>%
+  filter(!is.na(survey_data)) %>%
+  select(participant_id, response, survey_data) %>%
+  pivot_wider(names_from = survey_data, values_from = response)
+
+extract_number <- function(x) {
+  as.numeric(gsub("[^0-9]+", "", x))
+}
+
+# `age` 列が存在する場合のみ処理
+if ("age" %in% colnames(survey_d)) {
+  survey_d <- survey_d %>%
+    mutate(age = ifelse(grepl('[^0-9]', age), extract_number(age),
+                        as.numeric(age)))
+}
+```
+
+#### 0.1.1. 回答別の参加者数
+
+ここでは欠損値のない有効参加者数を確認する目的。
+
+回答数別の人数
+
+```{r}
+table(table(DataList$participant_id))
+```
+
+#### 0.1.2. 任意アンケートによる男女比率
+
+性別回答別の人数(0=women, 1=men, 2= other)
+
+```{r}
+table(survey_d$gender)
+```
+
+#### 0.1.3. 年齢統計
+
+平均年齢
+
+```{r}
+survey_d_filterd_age <- filter(survey_d, age != 0)
+mean(survey_d_filterd_age$age)
+```
+
+最高齢
+
+```{r}
+survey_d_filterd_age <- filter(survey_d, age != 0)
+max(survey_d_filterd_age$age)
+```
+
+最少年齢
+
+```{r}
+survey_d_filterd_age <- filter(survey_d, age != 0)
+min(survey_d_filterd_age$age)
+```
+
+17-81 の範囲外の participant_id
+
+```{r}
+# survey_d_filterd_age <- filter(survey_d, age <= 18)
+# table(survey_d_filterd_age$participant_id)
+# 
+# survey_d_filterd_age <- filter(survey_d, age >= 80)
+# table(survey_d_filterd_age$participant_id)
+```
+
+#### 0.1.4. 年齢分布
+
+年齢別参加者の人数。点線は平均値
+
+```{r}
+age_mean <- mean(survey_d_filterd_age$age)
+
+plot_age <- ggplot(survey_d_filterd_age, aes(x = age)) +
+  geom_histogram(binwidth = 4, fill = "gray", color = "black") +
+  geom_vline(xintercept = age_mean, linetype = "dashed", color = "black") +
+  labs(title = "年齢分布", x = "年齢", y = "人数",
+    subtitle = paste("平均年齢=", round(age_mean))) +
+  apa_theme
+```
+
+### 0.2. タスクの統計
+
+#### 0.2.1. 実験別、手続きにかかる平均時間
+
+```{r}
+# 算出
+reaction_time_summary <- DataList %>%
+  filter(experiment_data != "null" & experiment_data != 9) %>%
+  group_by(experiment_data) %>%
+  summarise(
+    mean_NASA_RTLX = mean(reaction_time, na.rm = TRUE),
+    sd_NASA_RTLX = sd(reaction_time, na.rm = TRUE),
+    n = n()
+  )
+# 結果を表示
+print(reaction_time_summary)
+
+# グラフ
+ggplot(reaction_time_summary, aes(x = factor(experiment_data),
+                                  y = mean_NASA_RTLX)) +
+  # 棒グラフ
+  geom_bar(stat = "identity", alpha = 0.7) +  
+  geom_errorbar(aes(ymin = mean_NASA_RTLX - sd_NASA_RTLX,
+                    ymax = mean_NASA_RTLX + sd_NASA_RTLX),
+                # エラーバー
+                width = 0.2) +
+  labs(
+    title = "手続き時間 平均値と標準偏差",
+    x = "実験",
+    y = "平均手続き時間(秒)"
+  ) +
+  # scale_fill_grey(start = 0.2, end = 0.8) +  # グレースケール
+  apa_theme
+```
+
+#### 0.2.2. 実験別、手続きに対するNASA-TLXの平均点数
+
+```{r}
+# 算出
+nasa_rtlx_summary <- DataList %>%
+  ungroup() %>% 
+  filter(nasa_rtlx_data != "null" & nasa_rtlx_data != 9) %>%
+  mutate(nasa_rtlx = rowMeans(select(., mental_demand, physical_demand,
+                                     temporal_demand, performance, effort,
+                                     frustration), na.rm = TRUE)) %>%
+  group_by(nasa_rtlx_data) %>%
+  summarise(
+    mean_NASA_RTLX = mean(nasa_rtlx, na.rm = TRUE),
+    sd_NASA_RTLX = sd(nasa_rtlx, na.rm = TRUE),
+    n = n()
+  )
+
+# 結果を表示
+print(nasa_rtlx_summary)
+
+# グラフ
+ggplot(nasa_rtlx_summary, aes(x = factor(nasa_rtlx_data), y = mean_NASA_RTLX)) +
+  # 棒グラフ
+  geom_bar(stat = "identity", alpha = 0.7) +  
+  geom_errorbar(aes(ymin = mean_NASA_RTLX - sd_NASA_RTLX,
+                    ymax = mean_NASA_RTLX + sd_NASA_RTLX),
+                # エラーバー
+                width = 0.2) +
+  labs(
+    title = "NASA RTLX 平均値と標準偏差",
+    x = "実験",
+    y = "平均 NASA RTLX"
+  ) +
+  scale_fill_grey(start = 0.2, end = 0.8) +  # グレースケール
+  apa_theme
+```
+
+#### 0.2.3. 実験別、NASA-TLXの下位項目別の平均点数
+
+```{r, fig.show='hold', fig.height=4}
+# 各下位項目の算出
+nasa_rtlx_subscales <- DataList %>%
+  ungroup() %>%
+  filter(nasa_rtlx_data != "null" & nasa_rtlx_data != 9) %>%
+  group_by(nasa_rtlx_data) %>%
+  summarise(
+    mean_mental_demand = mean(mental_demand, na.rm = TRUE),
+    sd_mental_demand = sd(mental_demand, na.rm = TRUE),
+    mean_physical_demand = mean(physical_demand, na.rm = TRUE),
+    sd_physical_demand = sd(physical_demand, na.rm = TRUE),
+    mean_temporal_demand = mean(temporal_demand, na.rm = TRUE),
+    sd_temporal_demand = sd(temporal_demand, na.rm = TRUE),
+    mean_performance = mean(performance, na.rm = TRUE),
+    sd_performance = sd(performance, na.rm = TRUE),
+    mean_effort = mean(effort, na.rm = TRUE),
+    sd_effort = sd(effort, na.rm = TRUE),
+    mean_frustration = mean(frustration, na.rm = TRUE),
+    sd_frustration = sd(frustration, na.rm = TRUE),
+    n = n()
+  )
+
+# 結果を表示
+print(nasa_rtlx_subscales)
+
+# グラフの作成
+plot_nasa_rtlx <- function(data, measure, measure_sd, title) {
+  ggplot(data, aes(x = factor(nasa_rtlx_data), y = !!sym(measure))) +
+    geom_bar(stat = "identity", alpha = 0.7) +
+    geom_errorbar(aes(ymin = !!sym(measure) - !!sym(measure_sd),
+                      ymax = !!sym(measure) + !!sym(measure_sd)), width = 0.2) +
+    labs(
+      title = title,
+      x = "実験",
+      y = "平均値"
+    ) +
+    scale_fill_grey(start = 0.2, end = 0.8) +
+    apa_theme
+}
+
+# 各下位項目のグラフを作成
+plot_mental_demand <- plot_nasa_rtlx(nasa_rtlx_subscales,
+                                     "mean_mental_demand",
+                                     "sd_mental_demand",
+                                     "Mental Demand")
+plot_physical_demand <- plot_nasa_rtlx(nasa_rtlx_subscales,
+                                       "mean_physical_demand",
+                                       "sd_physical_demand",
+                                       "Physical Demand")
+plot_temporal_demand <- plot_nasa_rtlx(nasa_rtlx_subscales,
+                                       "mean_temporal_demand",
+                                       "sd_temporal_demand",
+                                       "Temporal Demand")
+plot_performance <- plot_nasa_rtlx(nasa_rtlx_subscales,
+                                   "mean_performance",
+                                   "sd_performance",
+                                   "Performance")
+plot_effort <- plot_nasa_rtlx(nasa_rtlx_subscales,
+                              "mean_effort",
+                              "sd_effort",
+                              "Effort")
+plot_frustration <- plot_nasa_rtlx(nasa_rtlx_subscales,
+                                   "mean_frustration",
+                                   "sd_frustration",
+                                   "Frustration")
+
+# プロットを表示
+print(plot_mental_demand)
+print(plot_physical_demand)
+print(plot_temporal_demand)
+print(plot_performance)
+print(plot_effort)
+print(plot_frustration)
+```
+
+### 0.3. 回答内容の統計
+
+#### 0.3.1. 回答の分布
+
+##### 0.3.1.0. 可燃ごみ課題 実験 1 & 2
+
+課題の回答で最も多い答え
+
+```{r}
+# DataList の中から experimen_dataにデータ入力がある行のみ選別
+clicked_text_summary <- DataList %>%
+  filter(!is.na(experiment_data), !is.na(clicked_text)) %>%
+  ungroup() %>%            # グループ解除
+  select(participant_id, clicked_text) %>%
+  count(clicked_text) %>%  # clicked_text ごとの出現回数を集計
+  arrange(desc(n))         # 出現回数の多い順に並び替え
+
+# ヒストグラムの作成（fillなし）
+ggplot(clicked_text_summary, aes(x = clicked_text, y = n)) +
+  geom_bar(stat = "identity", fill = "gray40") +  # 単色
+  labs(title = "回答の集計",
+       x = "回答",
+       y = "数") +
+  apa_theme
+
+# # 表として出力
+clicked_text_summary %>%
+  kable(format = "html", caption = "回答の集計") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+```
+
+##### 0.3.1.1. 可燃ごみ課題 実験 1 & 2
+
+課題の回答で最も多い答え
+
+```{r}
+# DataList の中から experimen_dataにデータ入力がある行のみ選別
+clicked_text_summary <- DataList %>%
+  filter(!is.na(experiment_data), !is.na(clicked_text), experiment_data != 3,
+         experiment_data != 4) %>%
+  select(participant_id, experiment_data, clicked_text) %>%
+  group_by(experiment_data) %>%
+  count(experiment_data, clicked_text)
+
+# ヒストグラムの作成
+ggplot(clicked_text_summary, aes(x = clicked_text, y = n,
+                                 fill = factor(experiment_data))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "回答の集計(可燃ゴミ)",
+       x = "回答",
+       y = "数",
+       fill = "実験") +
+  scale_fill_grey(start = 0.2, end = 0.8) +
+  facet_wrap(~ experiment_data, ncol = 2) +  # 2列で分割
+  apa_theme
+```
+
+##### 0.3.1.2. 可燃ごみ課題 実験 3 & 4
+
+課題の回答で最も多い答え
+
+```{r}
+# DataList の中から experimen_dataにデータ入力がある行のみ選別
+clicked_text_summary <- DataList %>%
+  filter(!is.na(experiment_data), !is.na(clicked_text), experiment_data != 1,
+         experiment_data != 2) %>%
+  select(participant_id, experiment_data, clicked_text) %>%
+  group_by(experiment_data) %>%
+  count(experiment_data, clicked_text)
+
+# ヒストグラムの作成
+ggplot(clicked_text_summary, aes(x = clicked_text, y = n,
+                                 fill = factor(experiment_data))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "回答の集計(図書館の時間)",
+       x = "回答",
+       y = "数",
+       fill = "実験") +
+  scale_fill_grey(start = 0.2, end = 0.8) +
+  facet_wrap(~ experiment_data, ncol = 2) +  # 2列で分割
+  # theme(axis.text.x = element_text(angle = 35, hjust = 1)) +
+    apa_theme
+```
+
+## 1. 年齢 vs 手続きコスト
+
+### 1.0. データの抽出
+
+```{r, results='hide', message=FALSE}
+# Welch's t-test function
+age_perform_t_test <- function(data, var, group_var) {
+  result <- t.test(as.formula(paste(var, "~", group_var)),
+                   data = data, var.equal = FALSE)
+  # Format and output
+  formatted_result <- sprintf(
+    "\n----------------\nt-test result:\n----------------\nt-value: %.3f\np-value: %.5f\ndegrees of freedom: %.2f\n95%% confidence interval: [%.3f, %.3f]\nMean difference: %.3f",
+    result$statistic, result$p.value, result$parameter, result$conf.int[1],
+    result$conf.int[2], result$estimate[1] - result$estimate[2]
+  )
+  
+  cat(formatted_result, "\n")
+}
+
+# 回答時間のデータ
+cleaned_rt_data <- DataList %>%
+  # 回答時間データの取得・型変換
+  filter(experiment_data %in% c(1, 2, 3, 4), experiment_data != 9,
+         !is.na(reaction_time)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  mutate(reaction_time = suppressWarnings(as.numeric(reaction_time))) %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age), !is.na(reaction_time)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+# nasa-rtlxのデータ
+cleaned_nasa_rtlx <- DataList %>%
+  # 無効データの除外
+  filter(!nasa_rtlx_data %in% c("null", 9)) %>%
+  # NASA-RTLX スコアの計算
+  mutate(nasa_rtlx = rowMeans(across(mental_demand:frustration),
+                              na.rm = TRUE)) %>%
+  # アンケートデータ（年齢）の結合
+  left_join(
+    survey_d %>%
+      select(participant_id, age),
+    by = "participant_id"
+  ) %>%
+  # 有効データの抽出
+  filter(!is.na(age), !is.na(nasa_rtlx)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+```
+
+### 1.1. 可燃ゴミ課題(実験1＆実験2)
+
+#### 手続き時間
+
+```{r}
+age_exp1exp2_rt_t_test <- age_perform_t_test(cleaned_rt_data %>%
+                                    filter(experiment_data %in% c(1, 2)),
+                                  "reaction_time", "age_group")
+
+age_exp1_rt_t_test <- age_perform_t_test(cleaned_rt_data %>%
+                                    filter(experiment_data %in% 1),
+                                  "reaction_time", "age_group")
+
+age_exp2_rt_t_test <- age_perform_t_test(cleaned_rt_data %>%
+                                    filter(experiment_data %in% 2),
+                                  "reaction_time", "age_group")
+```
+
+##### 1.1.1.2. グラフ
+
+```{r}
+# p値を取得
+p_value <- age_exp1exp2_rt_t_test$p.value
+
+# p値に応じたアスタリスクを決定
+stars <- case_when(
+  p_value < 0.001 ~ "***",
+  p_value < 0.01  ~ "**",
+  p_value < 0.05  ~ "*",
+  TRUE            ~ "n.s."
+)
+
+# プロット
+ggplot(cleaned_rt_data %>% filter(experiment_data %in% 1),
+       aes(x = factor(age_group), y = reaction_time)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("2.平均以上", "1.平均未満")), 
+                     method = "t.test", 
+                     label = "p.signif") +  # これで自動的にアスタリスクが付く
+  labs(x = "Experiment", y = "手続き時間",
+       title = "可燃ゴミ課題(実験1)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+
+# プロット
+ggplot(cleaned_rt_data %>% filter(experiment_data %in% 2),
+       aes(x = factor(age_group), y = reaction_time)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("2.平均以上", "1.平均未満")), 
+                     method = "t.test", 
+                     label = "p.signif") +  # これで自動的にアスタリスクが付く
+  labs(x = "Experiment", y = "手続き時間",
+       title = "可燃ゴミ課題(実験2)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+```
+
+#### NASA-RTLX
+
+```{r}
+age_exp1exp2_nasa_t_test <- age_perform_t_test(cleaned_nasa_rtlx %>%
+                                         filter(nasa_rtlx_data %in% c(1, 2)),
+                                       "nasa_rtlx", "age_group")
+
+age_exp1_nasa_t_test <- age_perform_t_test(cleaned_nasa_rtlx %>%
+                                         filter(nasa_rtlx_data %in% 1),
+                                       "nasa_rtlx", "age_group")
+
+age_exp2_nasa_t_test <- age_perform_t_test(cleaned_nasa_rtlx %>%
+                                         filter(nasa_rtlx_data %in% 2),
+                                       "nasa_rtlx", "age_group")
+```
+
+##### 1.1.2.2. グラフ
+
+```{r}
+# p値を取得
+p_value <- age_exp1exp2_nasa_t_test$p.value
+
+# p値に応じたアスタリスクを決定
+stars <- case_when(
+  p_value < 0.001 ~ "***",
+  p_value < 0.01  ~ "**",
+  p_value < 0.05  ~ "*",
+  TRUE            ~ "n.s."
+)
+
+# プロット
+ggplot(cleaned_nasa_rtlx %>% filter(nasa_rtlx_data %in% 1),
+       aes(x = factor(age_group), y = nasa_rtlx)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("2.平均以上", "1.平均未満")), 
+                     method = "t.test", 
+                     label = "p.signif") +  # これで自動的にアスタリスクが付く
+  labs(x = "Experiment", y = "NASA-RTLX",
+       title = "可燃ゴミ課題(実験1)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+
+# プロット
+ggplot(cleaned_nasa_rtlx %>% filter(nasa_rtlx_data %in% 2),
+       aes(x = factor(age_group), y = nasa_rtlx)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("2.平均以上", "1.平均未満")), 
+                     method = "t.test", 
+                     label = "p.signif") +  # これで自動的にアスタリスクが付く
+  labs(x = "Experiment", y = "NASA-RTLX",
+       title = "可燃ゴミ課題(実験2)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+```
+
+### 1.2. 図書館の時間課題(実験3＆実験4)
+
+#### 手続き時間
+
+```{r}
+age_exp3exp4_rt_t_test <- age_perform_t_test(cleaned_rt_data %>%
+                                    filter(experiment_data %in% c(3, 4)),
+                                  "reaction_time", "age_group")
+
+age_exp3_rt_t_test <- age_perform_t_test(cleaned_rt_data %>%
+                                    filter(experiment_data %in% 3),
+                                  "reaction_time", "age_group")
+
+
+age_exp4_rt_t_test <- age_perform_t_test(cleaned_rt_data %>%
+                                    filter(experiment_data %in% 4),
+                                  "reaction_time", "age_group")
+```
+
+##### 1.2.1.2. グラフ
+
+```{r}
+# p値を取得
+p_value <- age_exp3exp4_rt_t_test$p.value
+
+# p値に応じたアスタリスクを決定
+stars <- case_when(
+  p_value < 0.001 ~ "***",
+  p_value < 0.01  ~ "**",
+  p_value < 0.05  ~ "*",
+  TRUE            ~ "n.s."
+)
+
+# プロット
+ggplot(cleaned_rt_data %>% filter(experiment_data %in% 3),
+       aes(x = factor(age_group), y = reaction_time)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("2.平均以上", "1.平均未満")), 
+                     method = "t.test", 
+                     label = "p.signif") +  # これで自動的にアスタリスクが付く
+  labs(x = "Experiment", y = "手続き時間",
+       title = "図書館の時間課題(実験3)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+
+# プロット
+ggplot(cleaned_rt_data %>% filter(experiment_data %in% 4),
+       aes(x = factor(age_group), y = reaction_time)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("2.平均以上", "1.平均未満")), 
+                     method = "t.test", 
+                     label = "p.signif") +  # これで自動的にアスタリスクが付く
+  labs(x = "Experiment", y = "手続き時間",
+       title = "図書館の時間課題(実験4)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+```
+
+#### 1.2.2.1. NASA-RTLX
+
+```{r}
+age_exp3exp4_nasa_t_test <- age_perform_t_test(cleaned_nasa_rtlx %>%
+                                         filter(nasa_rtlx_data %in% c(3, 4)),
+                                       "nasa_rtlx", "age_group")
+
+age_exp3_nasa_t_test <- age_perform_t_test(cleaned_nasa_rtlx %>%
+                                         filter(nasa_rtlx_data %in% 3),
+                                       "nasa_rtlx", "age_group")
+
+age_exp4_nasa_t_test <- age_perform_t_test(cleaned_nasa_rtlx %>%
+                                         filter(nasa_rtlx_data %in% 4),
+                                       "nasa_rtlx", "age_group")
+```
+
+##### 1.2.2.2. グラフ
+
+```{r}
+# p値を取得
+p_value <- age_exp3exp4_nasa_t_test$p.value
+
+# p値に応じたアスタリスクを決定
+stars <- case_when(
+  p_value < 0.001 ~ "***",
+  p_value < 0.01  ~ "**",
+  p_value < 0.05  ~ "*",
+  TRUE            ~ "n.s."
+)
+
+# プロット
+ggplot(cleaned_nasa_rtlx %>% filter(nasa_rtlx_data %in% 3),
+       aes(x = factor(age_group), y = nasa_rtlx)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("2.平均以上", "1.平均未満")), 
+                     method = "t.test", 
+                     label = "p.signif") +  # これで自動的にアスタリスクが付く
+  labs(x = "Experiment", y = "NASA-RTLX",
+       title = "図書館の時間(実験3)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+
+
+# プロット
+ggplot(cleaned_nasa_rtlx %>% filter(nasa_rtlx_data %in% 4),
+       aes(x = factor(age_group), y = nasa_rtlx)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("2.平均以上", "1.平均未満")), 
+                     method = "t.test", 
+                     label = "p.signif") +  # これで自動的にアスタリスクが付く
+  labs(x = "Experiment", y = "NASA-RTLX",
+       title = "図書館の時間(実験4)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+```
+
+## 2. デザイン vs 手続きコスト
+
+### 2.0. ️データの抽出
+
+```{r, results='hide', message=FALSE}
+# 対応のある t 検定関数
+design_perform_t_test <- function(data, var, group_var) {
+  result <- t.test(as.formula(paste(var, "~", group_var)),
+                   data = data, var.equal = TRUE)
+  
+  # Format and output
+  formatted_result <- sprintf(
+    "\n----------------\nt-test result:\n----------------\nt-value: %.3f\np-value: %.5f\ndegrees of freedom: %.2f\n95%% confidence interval: [%.3f, %.3f]\nMean difference: %.3f",
+    result$statistic, result$p.value, result$parameter, result$conf.int[1],
+    result$conf.int[2], result$estimate[1] - result$estimate[2]
+  )
+  
+  cat(formatted_result, "\n")
+}
+
+# 回答時間のデータ
+cleaned_rt_data <- DataList %>%
+  # 回答時間データの取得・型変換
+  filter(experiment_data %in% c(1, 2, 3, 4),
+         experiment_data != 9, !is.na(reaction_time)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  mutate(reaction_time = suppressWarnings(as.numeric(reaction_time))) %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age), !is.na(reaction_time)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+# nasa-rtlxのデータ
+cleaned_nasa_rtlx <- DataList %>%
+  # 無効データの除外
+  filter(!nasa_rtlx_data %in% c("null", 9)) %>%
+  # NASA-RTLX スコアの計算
+  mutate(nasa_rtlx = rowMeans(across(mental_demand:frustration),
+                              na.rm = TRUE)) %>%
+  # アンケートデータ（年齢）の結合
+  left_join(
+    survey_d %>%
+      select(participant_id, age),
+    by = "participant_id"
+  ) %>%
+  # 有効データの抽出
+  filter(!is.na(age), !is.na(nasa_rtlx)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+```
+
+### 2.1. 可燃ゴミ課題(実験1＆実験2)
+
+#### 2.1.1.1.手続き時間
+
+```{r}
+design_exp1exp2_rt_t_test <- design_perform_t_test(cleaned_rt_data %>%
+                                    filter(experiment_data %in% c(1, 2)),
+                                  "reaction_time", "experiment_data")
+```
+
+##### 2.1.1.1.2. グラフ
+
+```{r}
+# p値を取得
+p_value <- design_exp1exp2_rt_t_test$p.value
+
+# p値に応じたアスタリスクを決定
+stars <- case_when(
+  p_value < 0.001 ~ "***",
+  p_value < 0.01  ~ "**",
+  p_value < 0.05  ~ "*",
+  TRUE            ~ "n.s."
+)
+
+# プロット
+g3_rt<-ggplot(cleaned_rt_data %>% filter(experiment_data %in% c(1, 2)),
+       aes(x = factor(experiment_data), y = reaction_time)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("1", "2")), 
+                     method = "t.test", 
+                     label = "p.signif") +  # これで自動的にアスタリスクが付く
+  labs(x = "Experiment", y = "手続き時間",
+       title = "Easy 課題 (回答時間)") +
+       # title = "可燃ゴミ課題(実験1＆実験2)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+g3_rt
+```
+
+#### 2.1.1.2. NASA-RTLX
+
+```{r}
+design_exp1exp2_nasa_t_test <- design_perform_t_test(cleaned_nasa_rtlx %>%
+                                         filter(nasa_rtlx_data %in% c(1, 2)),
+                                       "nasa_rtlx", "nasa_rtlx_data")
+```
+
+##### 2.1.1.2.2. グラフ
+
+```{r}
+# p値を取得
+p_value <- design_exp1exp2_nasa_t_test$p.value
+
+# p値に応じたアスタリスクを決定
+stars <- case_when(
+  p_value < 0.001 ~ "***",
+  p_value < 0.01  ~ "**",
+  p_value < 0.05  ~ "*",
+  TRUE            ~ "n.s."
+)
+
+# プロット
+g3_NASA <- ggplot(cleaned_nasa_rtlx %>% filter(nasa_rtlx_data %in% c(1, 2)),
+       aes(x = factor(nasa_rtlx_data), y = nasa_rtlx)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("1", "2")), 
+                     method = "t.test", 
+                     label = "p.signif") +  # これで自動的にアスタリスクが付く
+  labs(x = "Experiment", y = "NASA-RTLX",
+       title = "Easy 課題 (主観的なストレス)") +
+       # title = "可燃ゴミ課題(実験1＆実験2)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+g3_NASA
+```
+
+### 2.2. 図書館の時間課題(実験3＆実験4)
+
+#### 2.2.1. 手続き時間
+
+```{r}
+design_exp3exp4_rt_t_test <- design_perform_t_test(cleaned_rt_data %>%
+                                    filter(experiment_data %in% c(3, 4)),
+                                  "reaction_time", "experiment_data")
+```
+
+##### 2.2.1.2. グラフ
+
+```{r}
+# p値を取得
+p_value <- design_exp3exp4_rt_t_test$p.value
+
+# p値に応じたアスタリスクを決定
+stars <- case_when(
+  p_value < 0.001 ~ "***",
+  p_value < 0.01  ~ "**",
+  p_value < 0.05  ~ "*",
+  TRUE            ~ "n.s."
+)
+
+# プロット
+g4_rt <- ggplot(cleaned_rt_data %>% filter(experiment_data %in% c(3, 4)),
+       aes(x = factor(experiment_data), y = reaction_time)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("3", "4")), 
+                     method = "t.test", 
+                     label = "p.signif") +  # これで自動的にアスタリスクが付く
+  labs(x = "Experiment", y = "手続き時間",
+       title = "図書館の時間課題(実験3＆実験4)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+g4_rt
+```
+
+#### 2.2.2.NASA-RTLX
+
+```{r}
+design_exp3exp4_nasa_t_test <- design_perform_t_test(cleaned_nasa_rtlx %>%
+                                         filter(nasa_rtlx_data %in% c(3, 4)),
+                                       "nasa_rtlx", "nasa_rtlx_data")
+```
+
+##### 2.2.2.2. グラフ
+
+```{r}
+# p値を取得
+p_value <- design_exp3exp4_nasa_t_test$p.value
+
+# p値に応じたアスタリスクを決定
+stars <- case_when(
+  p_value < 0.001 ~ "***",
+  p_value < 0.01  ~ "**",
+  p_value < 0.05  ~ "*",
+  TRUE            ~ "n.s."
+)
+
+# プロット
+g4_nasa_rtlx <- ggplot(cleaned_nasa_rtlx %>%
+                         filter(nasa_rtlx_data %in%
+                                  c(3, 4)),
+                       aes(x = factor(nasa_rtlx_data),
+                           y = nasa_rtlx)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("3", "4")), 
+                     method = "t.test", 
+                     label = "p.signif") +  # これで自動的にアスタリスクが付く
+  labs(x = "Experiment", y = "NASA-RTLX",
+       title = "図書館の時間課題(実験3＆実験4)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+g4_nasa_rtlx
+```
+
+## 3. 年齢のデザインによる軽減効果 vs 手続きコスト
+
+### 3.0. データの抽出
+
+```{r, results='hide', message=FALSE}
+# 対応のない t 検定関数
+# Welch's t-test function
+age_perform_t_test <- function(data, var, group_var) {
+  result <- t.test(as.formula(paste(var, "~", group_var)),
+                   data = data, var.equal = FALSE)
+  # Format and output
+  formatted_result <- sprintf(
+    "\n----------------\nt-test result:\n----------------\nt-value: %.3f\np-value: %.5f\ndegrees of freedom: %.2f\n95%% confidence interval: [%.3f, %.3f]\nMean difference: %.3f",
+    result$statistic, result$p.value, result$parameter, result$conf.int[1],
+    result$conf.int[2], result$estimate[1] - result$estimate[2]
+  )
+  
+  cat(formatted_result, "\n")
+}
+
+# 回答時間のデータ
+cleaned_diff_rt_data <- DataList %>%
+  # 回答時間データの取得・型変換
+  filter(experiment_data %in% c(1, 2, 3, 4), experiment_data != 9,
+         !is.na(reaction_time)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  mutate(reaction_time = suppressWarnings(as.numeric(reaction_time))) %>%
+  # experiment_dataごとの回答時間を横持ちに変換
+  pivot_wider(names_from = experiment_data, values_from = reaction_time,
+              names_prefix = "rt_") %>%
+  # 回答時間の差分計算
+  mutate(
+    diff_rt_1_2 = rt_1 - rt_2,
+    diff_rt_3_4 = rt_3 - rt_4
+  ) %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+
+
+# NASA-RTLXのデータ
+cleaned_diff_nasa_rtlx <- DataList %>%
+  # 無効データの除外
+  filter(!nasa_rtlx_data %in% c("null", 9)) %>%
+  # NASA-RTLX スコアの計算
+  mutate(nasa_rtlx = rowMeans(across(mental_demand:frustration),
+                              na.rm = TRUE)) %>%
+  filter(nasa_rtlx_data %in% c(1, 2, 3, 4), nasa_rtlx_data != 9,
+         !is.na(nasa_rtlx)) %>%
+  select(participant_id, nasa_rtlx_data, nasa_rtlx) %>%
+  # nasa_rtlx_dataごとの回答時間を横持ちに変換
+  pivot_wider(names_from = nasa_rtlx_data, values_from = nasa_rtlx,
+              names_prefix = "nasa_rtlx_") %>%
+  # 回答時間の差分計算
+  mutate(
+    diff_nasa_rtlx_1_2 = nasa_rtlx_1 - nasa_rtlx_2,
+    diff_nasa_rtlx_3_4 = nasa_rtlx_3 - nasa_rtlx_4
+  ) %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+```
+
+### 3.1. 可燃ゴミ課題(実験1＆実験2)
+
+デモデータはデータ不足で分析不能の為コメントアウト中
+
+```{r}
+age_diffDesign_exp1exp2_rt_t_test <- age_perform_t_test(cleaned_diff_rt_data,
+                                  "diff_rt_1_2", "age_group")
+
+age_diffDesign_exp1exp2_nasa_rtlx_t_test <- age_perform_t_test(
+  cleaned_diff_nasa_rtlx, "diff_nasa_rtlx_1_2", "age_group")
+```
+
+##### 3.1.2. グラフ
+
+```{r}
+# p値を取得
+p_value <- age_diffDesign_exp1exp2_rt_t_test$p.value
+
+# p値に応じたアスタリスクを決定
+stars <- case_when(
+  p_value < 0.001 ~ "***",
+  p_value < 0.01  ~ "**",
+  p_value < 0.05  ~ "*",
+  TRUE            ~ "n.s."
+)
+
+# プロット
+ggplot(cleaned_diff_rt_data, aes(x = age_group, y = diff_rt_1_2)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("2.平均以上", "1.平均未満")),
+                     method = "t.test",
+                     label = "p.signif") +  # 自動でアスタリスクを表示
+  labs(x = "年齢グループ", y = "回答時間の差分 (実験1 - 実験2)", title = "年齢グループ間の回答時間の差") +
+stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+             shape = "diamond", size = 4) +
+  apa_theme
+
+
+# NASA-RTLX
+# p値を取得
+p_value <- age_diffDesign_exp1exp2_nasa_rtlx_t_test$p.value
+
+# p値に応じたアスタリスクを決定
+stars <- case_when(
+  p_value < 0.001 ~ "***",
+  p_value < 0.01  ~ "**",
+  p_value < 0.05  ~ "*",
+  TRUE            ~ "n.s."
+)
+
+# プロット
+ggplot(cleaned_diff_nasa_rtlx, aes(x = age_group, y = diff_nasa_rtlx_1_2)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("2.平均以上", "1.平均未満")),
+                     method = "t.test",
+                     label = "p.signif") +  # 自動でアスタリスクを表示
+  labs(x = "年齢グループ", y = "NASA-RTLXの差分 (実験1 - 実験2)", title = "年齢グループ間の回答時間の差") +
+stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+             shape = "diamond", size = 4) +
+  apa_theme
+```
+
+### 3.2. 図書館の時間課題(実験3＆実験4)
+
+デモデータはデータ不足で分析不能の為コメントアウト中
+
+```{r}
+age_diffDesign_exp3exp4_rt_t_test <- age_perform_t_test(cleaned_diff_rt_data,
+                                  "diff_rt_3_4", "age_group")
+
+
+age_diffDesign_exp3exp4_nasa_rtlx_t_test <- age_perform_t_test(
+  cleaned_diff_nasa_rtlx, "diff_nasa_rtlx_3_4", "age_group")
+
+```
+
+##### 3.1.2. グラフ
+
+```{r}
+# p値を取得
+p_value <- age_diffDesign_exp3exp4_rt_t_test$p.value
+
+# p値に応じたアスタリスクを決定
+stars <- case_when(
+  p_value < 0.001 ~ "***",
+  p_value < 0.01  ~ "**",
+  p_value < 0.05  ~ "*",
+  TRUE            ~ "n.s."
+)
+
+# プロット
+g5<-ggplot(cleaned_diff_rt_data, aes(x = age_group, y = diff_rt_3_4)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("2.平均以上", "1.平均未満")),
+                     method = "t.test",
+                     label = "p.signif") +  # 自動でアスタリスクを表示
+  labs(x = "年齢グループ", y = "回答時間の差分 (実験3 - 実験4)",
+       title = "difficult 課題 (回答時間の差)") +
+  stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+               shape = "diamond", size = 4) +
+  apa_theme
+g5
+
+# NASA-RTLX
+# p値を取得
+p_value <- age_diffDesign_exp3exp4_nasa_rtlx_t_test$p.value
+
+# p値に応じたアスタリスクを決定
+stars <- case_when(
+  p_value < 0.001 ~ "***",
+  p_value < 0.01  ~ "**",
+  p_value < 0.05  ~ "*",
+  TRUE            ~ "n.s."
+)
+
+# プロット
+g6<-ggplot(cleaned_diff_nasa_rtlx, aes(x = age_group, y = diff_nasa_rtlx_3_4)) +
+  geom_boxplot() +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  stat_compare_means(comparisons = list(c("2.平均以上", "1.平均未満")),
+                     method = "t.test",
+                     label = "p.signif") +  # 自動でアスタリスクを表示
+  labs(x = "年齢グループ", y = "NASA-RTLXの差分 (実験3 - 実験4)",
+       title = "difficult 課題 (主観的なストレスの差分)") +
+　stat_summary(fun = mean, geom = "point", color = "#4dc4ff",
+             shape = "diamond", size = 4) +
+  apa_theme
+g6
+```
+
+## 4. 回帰分析
+
+### 4.0. データ抽出
+
+```{r}
+# 回答時間のデータ
+cleaned_rt_data <- DataList %>%
+  # 回答時間データの取得・型変換
+  filter(experiment_data %in% c(1, 2, 3, 4),
+         experiment_data != 9, !is.na(reaction_time)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  mutate(reaction_time = suppressWarnings(as.numeric(reaction_time))) %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age), !is.na(reaction_time)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+exp1exp2_cleaned_rt_data <- DataList %>%
+  # 回答時間データの取得・型変換
+  filter(experiment_data %in% c(1, 2),
+         experiment_data != 9, !is.na(reaction_time)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  mutate(reaction_time = suppressWarnings(as.numeric(reaction_time))) %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age), !is.na(reaction_time)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+exp3exp4_cleaned_rt_data <- DataList %>%
+  # 回答時間データの取得・型変換
+  filter(experiment_data %in% c(3, 4),
+         experiment_data != 9, !is.na(reaction_time)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  mutate(reaction_time = suppressWarnings(as.numeric(reaction_time))) %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age), !is.na(reaction_time)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+# nasa-rtlxのデータ
+cleaned_nasa_rtlx <- DataList %>%
+  # 無効データの除外
+  filter(!nasa_rtlx_data %in% c("null", 9)) %>%
+  # NASA-RTLX スコアの計算
+  mutate(nasa_rtlx = rowMeans(across(mental_demand:frustration),
+                              na.rm = TRUE)) %>%
+  # アンケートデータ（年齢）の結合
+  left_join(
+    survey_d %>%
+      select(participant_id, age),
+    by = "participant_id"
+  ) %>%
+  # 有効データの抽出
+  filter(!is.na(age), !is.na(nasa_rtlx)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+# nasa-rtlxのデータ
+exp1exp2_cleaned_nasa_rtlx <- DataList %>%
+  # 無効データの除外
+  filter(nasa_rtlx_data %in% c(1, 2),
+         !nasa_rtlx_data %in% c("null", 9)) %>%
+  # NASA-RTLX スコアの計算
+  mutate(nasa_rtlx = rowMeans(across(mental_demand:frustration),
+                              na.rm = TRUE)) %>%
+  # アンケートデータ（年齢）の結合
+  left_join(
+    survey_d %>%
+      select(participant_id, age),
+    by = "participant_id"
+  ) %>%
+  # 有効データの抽出
+  filter(!is.na(age), !is.na(nasa_rtlx)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+# nasa-rtlxのデータ
+exp3exp4_cleaned_nasa_rtlx <- DataList %>%
+  # 無効データの除外
+  filter(nasa_rtlx_data %in% c(3, 4),
+         !nasa_rtlx_data %in% c("null", 9)) %>%
+  # NASA-RTLX スコアの計算
+  mutate(nasa_rtlx = rowMeans(across(mental_demand:frustration),
+                              na.rm = TRUE)) %>%
+  # アンケートデータ（年齢）の結合
+  left_join(
+    survey_d %>%
+      select(participant_id, age),
+    by = "participant_id"
+  ) %>%
+  # 有効データの抽出
+  filter(!is.na(age), !is.na(nasa_rtlx)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+```
+
+### 4.1. 年齢の回帰
+
+```{r}
+# RT
+# 全体
+# 回帰分析
+lm_model_rt <- lm(reaction_time ~ age, data = cleaned_rt_data)
+lm_summary_rt <- summary(lm_model_rt)
+# 回帰係数と切片の取得
+intercept <- lm_summary_rt$coefficients["(Intercept)", "Estimate"]
+slope <- lm_summary_rt$coefficients["age", "Estimate"]
+p_value <- lm_summary_rt$coefficients["age", "Pr(>|t|)"]
+# フォーマットして表示用のテキストを作成
+regression_text <- paste0(
+  "切片 = ", signif(intercept, 3), 
+  ", 回帰係数 = ", signif(slope, 3), 
+  ", p = ", signif(p_value, 3)
+)
+# 散布図と回帰線の描画
+plot01 <- ggplot(cleaned_rt_data, aes(x = age, y = reaction_time)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "#4dc4ff") +
+  labs(
+    x = "年齢", 
+    y = "回答時間 (秒)", 
+    title = "年齢と回答時間の関係"
+  ) +
+  apa_theme +
+  annotate(
+    "text",
+    x = max(cleaned_rt_data$age),
+    y = max(cleaned_rt_data$reaction_time),
+    label = regression_text,
+    hjust = 1, vjust = 0.9,
+    size = 8, color = "black",
+    lineheight = 0.8  # 行間を縮める
+  )
+print(plot01)
+
+# exp1 & exp2
+# 回帰分析
+exp1exp2_lm_model_rt <- lm(reaction_time ~ age, data = exp1exp2_cleaned_rt_data)
+exp1exp2_lm_summary_rt <- summary(exp1exp2_lm_model_rt)
+# 回帰係数と切片の取得
+intercept <- exp1exp2_lm_summary_rt$coefficients["(Intercept)", "Estimate"]
+slope <- exp1exp2_lm_summary_rt$coefficients["age", "Estimate"]
+p_value <- exp1exp2_lm_summary_rt$coefficients["age", "Pr(>|t|)"]
+# フォーマットして表示用のテキストを作成
+regression_text <- paste0(
+  "切片 = ", signif(intercept, 3), 
+  ", 回帰係数 = ", signif(slope, 3), 
+  ", p = ", signif(p_value, 3)
+)
+# 散布図と回帰線の描画
+plot01exp1exp2 <- ggplot(exp1exp2_cleaned_rt_data, aes(x = age, y = reaction_time)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "#4dc4ff") +
+  labs(
+    x = "年齢", 
+    y = "回答時間 (秒)", 
+    title = "課題難易度 easy"
+  ) +
+  apa_theme +
+  annotate(
+    "text",
+    x = max(exp1exp2_cleaned_rt_data$age),
+    y = max(exp1exp2_cleaned_rt_data$reaction_time),
+    label = regression_text,
+    hjust = 1, vjust = 0.9,
+    size = 8, color = "black",
+    lineheight = 0.8  # 行間を縮める
+  )
+print(plot01exp1exp2)
+
+# exp3 & exp4
+# 回帰分析
+exp3exp4_lm_model_rt <- lm(reaction_time ~ age, data = exp3exp4_cleaned_rt_data)
+exp3exp4_lm_summary_rt <- summary(exp3exp4_lm_model_rt)
+# 回帰係数と切片の取得
+intercept <- exp3exp4_lm_summary_rt$coefficients["(Intercept)", "Estimate"]
+slope <- exp3exp4_lm_summary_rt$coefficients["age", "Estimate"]
+p_value <- exp3exp4_lm_summary_rt$coefficients["age", "Pr(>|t|)"]
+# フォーマットして表示用のテキストを作成
+regression_text <- paste0(
+  "切片 = ", signif(intercept, 3), 
+  ", 回帰係数 = ", signif(slope, 3), 
+  ", p = ", signif(p_value, 3)
+)
+# 散布図と回帰線の描画
+plot01exp3exp4 <- ggplot(exp3exp4_cleaned_rt_data, aes(x = age, y = reaction_time)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "#4dc4ff") +
+  labs(
+    x = "年齢", 
+    y = "回答時間 (秒)", 
+    title = "課題難易度 difficult"
+  ) +
+  apa_theme +
+  annotate(
+    "text",
+    x = max(exp3exp4_cleaned_rt_data$age),
+    y = max(exp3exp4_cleaned_rt_data$reaction_time),
+    label = regression_text,
+    hjust = 1, vjust = 0.9,
+    size = 8, color = "black",
+    lineheight = 0.8  # 行間を縮める
+  )
+print(plot01exp3exp4)
+
+
+# NASA-rtlx
+# 全体
+# 回帰分析
+lm_model_nasa_rtlx <- lm(nasa_rtlx ~ age, data = cleaned_nasa_rtlx)
+lm_summary_nasa_rtlx <- summary(lm_model_nasa_rtlx)
+# 回帰係数と切片の取得
+intercept <- lm_summary_nasa_rtlx$coefficients["(Intercept)", "Estimate"]
+slope <- lm_summary_nasa_rtlx$coefficients["age", "Estimate"]
+p_value <- lm_summary_nasa_rtlx$coefficients["age", "Pr(>|t|)"]
+# フォーマットして表示用のテキストを作成
+regression_text <- paste0(
+  "切片 = ", signif(intercept, 3), 
+  ", 回帰係数 = ", signif(slope, 3), 
+  ", p = ", signif(p_value, 3)
+)
+# 散布図と回帰線の描画
+plot02 <- ggplot(cleaned_nasa_rtlx, aes(x = age, y = nasa_rtlx)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "#4dc4ff") +
+  labs(
+    x = "年齢", 
+    y = "NASA-RTLX", 
+    title = "年齢とNASA-RTLXの関係"
+  ) +
+  apa_theme +
+  annotate(
+    "text",
+    x = max(cleaned_nasa_rtlx$age),
+    y = max(cleaned_nasa_rtlx$nasa_rtlx),
+    label = regression_text,
+    hjust = 1, vjust = 0.9,
+    size = 8, color = "black",
+    lineheight = 0.8  # 行間を縮める
+  )
+print(plot02)
+
+# 実験1,2
+# plot02exp1exp2 <- ggplot(exp1exp2_cleaned_nasa_rtlx, aes(x = age, y = nasa_rtlx)) +
+#   geom_point(alpha = 0.5) +
+#   geom_smooth(method = "lm", se = TRUE, color = "#4dc4ff") +
+#   labs(x = "年齢", y = "NASA-RTLX", title = "年齢とNASA-RTLXの関係") +
+#   apa_theme
+# print(plot02exp1exp2)
+# 回帰分析
+exp1exp2_lm_model_nasa_rtlx <- lm(nasa_rtlx ~ age, data = exp1exp2_cleaned_nasa_rtlx)
+exp1exp2_lm_summary_nasa_rtlx <- summary(exp1exp2_lm_model_nasa_rtlx)
+# 回帰係数と切片の取得
+intercept <- exp1exp2_lm_summary_nasa_rtlx$coefficients["(Intercept)", "Estimate"]
+slope <- exp1exp2_lm_summary_nasa_rtlx$coefficients["age", "Estimate"]
+p_value <- exp1exp2_lm_summary_nasa_rtlx$coefficients["age", "Pr(>|t|)"]
+# フォーマットして表示用のテキストを作成
+regression_text <- paste0(
+  "切片 = ", signif(intercept, 3), 
+  ", 回帰係数 = ", signif(slope, 3), 
+  ", p = ", signif(p_value, 3)
+)
+# 散布図と回帰線の描画
+plot02exp1exp2 <- ggplot(exp1exp2_cleaned_nasa_rtlx,
+                         aes(x = age, y = nasa_rtlx)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "#4dc4ff") +
+  labs(
+    x = "年齢", 
+    y = "NASA-RTLX", 
+    title = "年齢とNASA-RTLXの関係"
+  ) +
+  apa_theme +
+  annotate(
+    "text",
+    x = max(exp1exp2_cleaned_nasa_rtlx$age),
+    y = max(exp1exp2_cleaned_nasa_rtlx$nasa_rtlx),
+    label = regression_text,
+    hjust = 1, vjust = 0.9,
+    size = 8, color = "black",
+    lineheight = 0.8  # 行間を縮める
+  )
+print(plot02exp1exp2)
+
+# 実験3,4
+# 回帰分析
+exp3exp4_lm_model_nasa_rtlx <- lm(nasa_rtlx ~ age, data = exp3exp4_cleaned_nasa_rtlx)
+exp3exp4_lm_summary_nasa_rtlx <- summary(exp3exp4_lm_model_nasa_rtlx)
+# 回帰係数と切片の取得
+intercept <- exp3exp4_lm_summary_nasa_rtlx$coefficients["(Intercept)", "Estimate"]
+slope <- exp3exp4_lm_summary_nasa_rtlx$coefficients["age", "Estimate"]
+p_value <- exp3exp4_lm_summary_nasa_rtlx$coefficients["age", "Pr(>|t|)"]
+# フォーマットして表示用のテキストを作成
+regression_text <- paste0(
+  "切片 = ", signif(intercept, 3), 
+  "\n回帰係数 = ", signif(slope, 3), 
+  "\np = ", signif(p_value, 3)
+)
+# 散布図と回帰線の描画
+plot02exp3exp4 <- ggplot(exp3exp4_cleaned_nasa_rtlx,
+                         aes(x = age, y = nasa_rtlx)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "#4dc4ff") +
+  labs(
+    x = "年齢", 
+    y = "NASA-RTLX", 
+    title = "年齢とNASA-RTLXの関係"
+  ) +
+  apa_theme +
+  annotate(
+    "text",
+    x = max(exp3exp4_cleaned_nasa_rtlx$age),
+    y = max(exp3exp4_cleaned_nasa_rtlx$nasa_rtlx),
+    label = regression_text,
+    hjust = 1, vjust = 0.9,
+    size = 8, color = "black",
+    lineheight = 0.8  # 行間を縮める
+  )
+print(plot02exp3exp4)
+```
+
+### 4.2. 年齢とデザインの回帰
+
+#### 4.2.1. 手続き時間
+
+```{r}
+# experiment_data を3を1に、4を2に変換
+expAll_cleaned_rt_data <- cleaned_rt_data %>%
+  mutate(experiment_data = case_when(
+    experiment_data == 3 ~ 1,
+    experiment_data == 4 ~ 2,
+    TRUE ~ experiment_data
+  ),
+  experiment_data = as.factor(experiment_data))
+
+# 回帰分析
+lm_model <- lm(reaction_time ~ age + experiment_data, data = expAll_cleaned_rt_data)
+# lm_model <- lm(reaction_time ~ age * experiment_data, data = expAll_cleaned_rt_data)
+summary(lm_model)
+
+# 散布図と回帰線の描画
+plot <- ggplot(expAll_cleaned_rt_data, aes(x = age, y = reaction_time, color = experiment_data)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(x = "年齢", y = "回答時間 (秒)", title = "年齢と回答時間の関係") +
+  apa_theme
+print(plot)
+```
+
+```{r}
+# experiment_data をダミー変数として回帰分析
+exp1exp2_cleaned_rt_data <- cleaned_rt_data  %>%
+  filter(experiment_data %in% c(1, 2))%>%
+  mutate(experiment_data = as.factor(experiment_data))
+
+lm_model <- lm(reaction_time ~ age + experiment_data, data = exp1exp2_cleaned_rt_data)
+# lm_model <- lm(reaction_time ~ age * experiment_data, data = expAll_cleaned_rt_data)
+summary(lm_model)
+
+# 散布図と回帰線の描画
+plot <- ggplot(exp1exp2_cleaned_rt_data, aes(x = age, y = reaction_time, color = experiment_data)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(x = "年齢", y = "回答時間 (秒)",
+       title = "年齢と回答時間の関係 (Easy 課題)") +
+  apa_theme
+print(plot)
+```
+
+```{r}
+# experiment_data をダミー変数として回帰分析
+exp3exp4_cleaned_rt_data <- cleaned_rt_data  %>%
+  filter(experiment_data %in% c(3, 4))%>%
+  mutate(experiment_data = as.factor(experiment_data))
+
+# lm_model <- lm(reaction_time ~ age + experiment_data, data = exp3exp4_cleaned_rt_data)
+lm_model <- lm(reaction_time ~ age * experiment_data, data = exp3exp4_cleaned_rt_data)
+summary(lm_model)
+
+# 散布図と回帰線の描画
+plot <- ggplot(exp3exp4_cleaned_rt_data, aes(x = age, y = reaction_time, color = experiment_data)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(x = "年齢", y = "回答時間 (秒)",
+       title = "年齢と回答時間の関係 (Difficult 課題)") +
+  apa_theme
+print(plot)
+```
+
+#### 4.2.2. NASA-RTLX
+
+```{r}
+# nasa_rtlx_data を3を1に、4を2に変換
+expAll_cleaned_nasa_rtlx <- cleaned_nasa_rtlx %>%
+  mutate(nasa_rtlx_data = case_when(
+    nasa_rtlx_data == 3 ~ 1,
+    nasa_rtlx_data == 4 ~ 2,
+    TRUE ~ nasa_rtlx_data
+  ),
+  nasa_rtlx_data = as.factor(nasa_rtlx_data))
+
+# 回帰分析
+# lm_model <- lm(nasa_rtlx ~ age + nasa_rtlx_data, data = expAll_cleaned_nasa_rtlx)
+lm_model <- lm(nasa_rtlx ~ age * nasa_rtlx_data, data = expAll_cleaned_nasa_rtlx)
+summary(lm_model)
+
+# 散布図と回帰線の描画
+plot <- ggplot(expAll_cleaned_nasa_rtlx, aes(x = age, y = nasa_rtlx, color = nasa_rtlx_data)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(x = "年齢", y = "回答時間 (秒)",
+       title = "年齢と回答時間の関係 (実験条件別)") +
+  apa_theme
+print(plot)
+```
+
+```{r}
+# nasa_rtlx_data をダミー変数として回帰分析
+exp1exp2_cleaned_nasa_rtlx <- cleaned_nasa_rtlx  %>%
+  filter(nasa_rtlx_data %in% c(1, 2))%>%
+  mutate(nasa_rtlx_data = as.factor(nasa_rtlx_data))
+
+# 回帰分析
+# lm_model <- lm(nasa_rtlx ~ age + nasa_rtlx_data, data = exp1exp2_cleaned_nasa_rtlx)
+lm_model <- lm(nasa_rtlx ~ age * nasa_rtlx_data, data = exp1exp2_cleaned_nasa_rtlx)
+summary(lm_model)
+
+# 散布図と回帰線の描画
+plot <- ggplot(expAll_cleaned_nasa_rtlx, aes(x = age, y = nasa_rtlx, color = nasa_rtlx_data)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(x = "年齢", y = "nasa_rtlx",
+       title = "年齢と主観的ストレスの関係 (Easy 課題)") +
+  apa_theme
+print(plot)
+```
+
+```{r}
+# nasa_rtlx_data をダミー変数として回帰分析
+exp3exp4_cleaned_nasa_rtlx <- cleaned_nasa_rtlx  %>%
+  filter(nasa_rtlx_data %in% c(3, 4))%>%
+  mutate(nasa_rtlx_data = as.factor(nasa_rtlx_data))
+
+# lm_model <- lm(nasa_rtlx ~ age + nasa_rtlx_data, data = exp3exp4_cleaned_nasa_rtlx)
+lm_model <- lm(nasa_rtlx ~ age * nasa_rtlx_data, data = exp3exp4_cleaned_nasa_rtlx)
+summary(lm_model)
+
+# 散布図と回帰線の描画
+plot <- ggplot(exp3exp4_cleaned_nasa_rtlx, aes(x = age, y = nasa_rtlx, color = nasa_rtlx_data)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(x = "年齢", y = "回答時間 (秒)",
+       title = "年齢と主観的ストレスの関係 (Difficult 課題)") +
+  apa_theme
+print(plot)
+```
+
+### 4.3. 年齢と改善率の回帰
+
+#### 4.3.0. データ抽出
+
+```{r}
+# 回答時間のデータ
+cleaned_diff_rt <- DataList %>%
+  # 回答時間データの取得・型変換
+  filter(experiment_data %in% c(1, 2, 3, 4), experiment_data != 9,
+         !is.na(reaction_time)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  mutate(reaction_time = suppressWarnings(as.numeric(reaction_time))) %>%
+  # experiment_dataごとの回答時間を横持ちに変換
+  pivot_wider(names_from = experiment_data, values_from = reaction_time,
+              names_prefix = "rt_") %>%
+  # 回答時間の差分計算
+  mutate(
+    diff_rt_1_2 = rt_1 - rt_2,
+    diff_rt_3_4 = rt_3 - rt_4
+  ) %>%
+  # diff_rtのデータを縦持ちに変換
+  pivot_longer(cols = starts_with("diff_rt_"),
+               names_to = "diff_rt_type",
+               values_to = "diff_rt") %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+
+
+# NASA-RTLXのデータ
+cleaned_diff_nasa_rtlx <- DataList %>%
+  # 無効データの除外
+  filter(!nasa_rtlx_data %in% c("null", 9)) %>%
+  # NASA-RTLX スコアの計算
+  mutate(nasa_rtlx = rowMeans(across(mental_demand:frustration),
+                              na.rm = TRUE)) %>%
+  filter(nasa_rtlx_data %in% c(1, 2, 3, 4), nasa_rtlx_data != 9,
+         !is.na(nasa_rtlx)) %>%
+  select(participant_id, nasa_rtlx_data, nasa_rtlx) %>%
+  # nasa_rtlx_dataごとの回答時間を横持ちに変換
+  pivot_wider(names_from = nasa_rtlx_data, values_from = nasa_rtlx,
+              names_prefix = "nasa_rtlx_") %>%
+  # 回答時間の差分計算
+  mutate(
+    diff_nasa_rtlx_1_2 = nasa_rtlx_1 - nasa_rtlx_2,
+    diff_nasa_rtlx_3_4 = nasa_rtlx_3 - nasa_rtlx_4
+  ) %>%
+  # diff_nasa_rtlxのデータを縦持ちに変換
+  pivot_longer(cols = starts_with("diff_nasa_rtlx_"),
+               names_to = "diff_nasa_type",
+               values_to = "diff_nasa_rtlx") %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+```
+
+#### 4.3.1. 手続き時間
+
+```{r}
+diff_rt_lm_model <- lm(diff_rt ~ age, data = cleaned_diff_rt)
+diff_rt_summary <- summary(diff_rt_lm_model)
+
+# 回帰係数と切片の取得
+intercept <- diff_rt_summary$coefficients["(Intercept)", "Estimate"]
+slope <- diff_rt_summary$coefficients["age", "Estimate"]
+p_value <- diff_rt_summary$coefficients["age", "Pr(>|t|)"]
+
+# フォーマットして表示用のテキストを作成
+regression_text <- paste0(
+  "切片 = ", signif(intercept, 3), 
+  ", 回帰係数 = ", signif(slope, 3), 
+  ", p = ", signif(p_value, 3)
+)
+
+# 散布図と回帰線の描画
+plot05_2 <- ggplot(cleaned_diff_rt, aes(x = age, y = diff_rt)) +
+  geom_point(alpha = 0.5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray", alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(
+    x = "年齢", 
+    y = "回答時間差分 (折り畳み表示 - 一覧表示)", 
+    title = "年齢と回答時間の関係 (Difficult 課題)"
+  ) +
+  annotate(
+    "text",
+    x = max(cleaned_diff_rt$age),
+    y = max(cleaned_diff_rt$diff_rt),
+    label = regression_text,
+    hjust = 1,
+    vjust = 0.9,
+    size = 8,
+    color = "black",
+    lineheight = 0.5  # 行間を縮める
+  ) +
+  apa_theme
+
+print(plot05_2)
+```
+
+#### 4.3.2. NASA-RTLX
+
+```{r}
+# # 回帰分析
+# diff_nasa_lm_model <- lm(diff_nasa_rtlx ~ age,
+#                          data = cleaned_diff_nasa_rtlx)
+# diff_nasa_rtlx_summary <- summary(diff_nasa_lm_model)
+# diff_nasa_rtlx_summary
+# diff_nasa_rtlx_p_value <- diff_nasa_rtlx_summary$coefficients["age",
+#                                                "Pr(>|t|)"]  # 年齢のp値
+# diff_nasa_rtlx_p_text <- paste0("p = ",
+#                                 signif(diff_nasa_rtlx_p_value, 3))  # p値を表示用にフォーマット
+# 
+# # 散布図と回帰線の描画
+# plot06_2 <- ggplot(cleaned_diff_nasa_rtlx,
+#                aes(x = age,
+#                    y = diff_nasa_rtlx)) +
+#   geom_point(alpha = 0.5) +
+#   geom_hline(yintercept = 0,
+#              linetype = "dashed",
+#              color = "gray",
+#              alpha = 0.5) +  # 原点に薄い横線
+#   geom_smooth(method = "lm", se = TRUE) +
+#   labs(x = "年齢", y = "ストレス差分 (折り畳み表示 - 一覧表示)",
+#        title = "年齢と主観的ストレスの関係 (Difficult 課題)") +
+#   apa_theme  +
+#   annotate("text",
+#            x = max(cleaned_diff_nasa_rtlx$age),
+#            y = max(cleaned_diff_nasa_rtlx$diff_nasa_rtlx),
+#            label = diff_nasa_rtlx_p_text,
+#            hjust = 1,
+#            vjust = 1,
+#            size = 8,
+#            color = "black")
+# print(plot06_2)
+
+# 回帰分析
+diff_nasa_lm_model <- lm(diff_nasa_rtlx ~ age, data = cleaned_diff_nasa_rtlx)
+diff_nasa_rtlx_summary <- summary(diff_nasa_lm_model)
+
+# 回帰係数と切片の取得
+intercept <- diff_nasa_rtlx_summary$coefficients["(Intercept)", "Estimate"]
+slope <- diff_nasa_rtlx_summary$coefficients["age", "Estimate"]
+p_value <- diff_nasa_rtlx_summary$coefficients["age", "Pr(>|t|)"]
+
+# フォーマットして表示用のテキストを作成
+regression_text <- paste0(
+  "切片 = ", signif(intercept, 3), 
+  ", 回帰係数 = ", signif(slope, 3), 
+  ", p = ", signif(p_value, 3)
+)
+
+# 散布図と回帰線の描画
+plot06_2 <- ggplot(cleaned_diff_nasa_rtlx, aes(x = age, y = diff_nasa_rtlx)) +
+  geom_point(alpha = 0.5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "gray", alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE) +
+  labs(
+    x = "年齢", 
+    y = "ストレス差分 (折り畳み表示 - 一覧表示)", 
+    title = "年齢と主観的ストレスの関係 (Difficult 課題)"
+  ) +
+  apa_theme +
+  annotate(
+    "text",
+    x = max(cleaned_diff_nasa_rtlx$age),
+    y = max(cleaned_diff_nasa_rtlx$diff_nasa_rtlx),
+    label = regression_text,
+    hjust = 1, vjust = 0.9,
+    size = 8, color = "black",
+    lineheight = 0.8  # 行間を縮める
+  )
+
+print(plot06_2)
+```
+
+## 5. 実験結果の一貫性
+
+### 5.1. 課題内の一貫性
+
+#### 5.1.0. データの抽出
+
+```{r}
+# 回答時間のデータ
+cleaned_rt_data <- DataList %>%
+  # 回答時間データの取得・型変換
+  filter(experiment_data %in% c(1, 2, 3, 4), experiment_data != 9,
+         !is.na(reaction_time)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  mutate(reaction_time = suppressWarnings(as.numeric(reaction_time))) %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age), !is.na(reaction_time)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+# nasa-rtlxのデータ
+cleaned_nasa_rtlx <- DataList %>%
+  # 無効データの除外
+  filter(!nasa_rtlx_data %in% c("null", 9)) %>%
+  # NASA-RTLX スコアの計算
+  mutate(nasa_rtlx = rowMeans(across(mental_demand:frustration),
+                              na.rm = TRUE)) %>%
+  # アンケートデータ（年齢）の結合
+  left_join(
+    survey_d %>%
+      select(participant_id, age),
+    by = "participant_id"
+  ) %>%
+  # 有効データの抽出
+  filter(!is.na(age), !is.na(nasa_rtlx)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+```
+
+#### 5.1.1. 可燃ゴミ(実験1＆実験2)
+
+相関分析
+
+```{r}
+# 回答時間
+exp1exp2_cleaned_rt_data <- cleaned_rt_data %>%
+  filter(experiment_data %in% c(1, 2)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  group_by(participant_id, experiment_data) %>%
+  summarise(reaction_time = mean(reaction_time, na.rm = TRUE),
+            .groups = "drop") %>% # 平均を計算
+  pivot_wider(names_from = experiment_data, values_from = reaction_time,
+              names_prefix = "rt_") %>%
+  filter(!is.na(rt_1), !is.na(rt_2))  # 両方のデータがあるペアのみ対象
+
+# 結果
+cor_result <- cor.test(exp1exp2_cleaned_rt_data$rt_1,
+                       exp1exp2_cleaned_rt_data$rt_2, method = "pearson")
+print(cor_result)
+
+
+
+# NASA-RTLX
+exp1exp2_cleaned_nasa_rtlx_data <- cleaned_nasa_rtlx %>%
+  filter(nasa_rtlx_data %in% c(1, 2)) %>%
+  select(participant_id, nasa_rtlx_data, nasa_rtlx) %>%
+  group_by(participant_id, nasa_rtlx_data) %>%
+  summarise(nasa_rtlx = mean(nasa_rtlx, na.rm = TRUE),
+            .groups = "drop") %>% # 平均を計算
+  pivot_wider(names_from = nasa_rtlx_data, values_from = nasa_rtlx,
+              names_prefix = "nasa_rtlx_") %>%
+  filter(!is.na(nasa_rtlx_1), !is.na(nasa_rtlx_2))  # 両方のデータがあるペアのみ対象
+
+# 結果
+exp1exp2_cor_nasa_rtlx_result <- cor.test(
+  exp1exp2_cleaned_nasa_rtlx_data$nasa_rtlx_1,
+  exp1exp2_cleaned_nasa_rtlx_data$nasa_rtlx_2, method = "pearson")
+print(exp1exp2_cor_nasa_rtlx_result)
+```
+
+
+##### 5.1.1.2. グラフ
+
+```{r, fig.show='hold', fig.height=4}
+pairs.panels(
+  exp1exp2_cleaned_rt_data[, c("rt_1", "rt_2")], 
+  method = "pearson", # 相関係数の計算方法（ピアソン）
+  hist.col = "gray", # ヒストグラムの色
+  density = TRUE, # 密度プロットを表示
+  ellipses = TRUE, # 信頼楕円を描画
+  lm = TRUE # 回帰直線を追加
+)
+
+pairs.panels(
+  exp1exp2_cleaned_nasa_rtlx_data[, c("nasa_rtlx_1", "nasa_rtlx_2")], 
+  method = "pearson", # 相関係数の計算方法（ピアソン）
+  hist.col = "gray", # ヒストグラムの色
+  density = TRUE, # 密度プロットを表示
+  ellipses = TRUE, # 信頼楕円を描画
+  lm = TRUE # 回帰直線を追加
+)
+```
+
+#### 5.1.2. 図書館の時間(実験3＆実験4)
+
+相関分析
+
+```{r}
+# 回答時間
+exp3exp4_cleaned_rt_data <- cleaned_rt_data %>%
+  filter(experiment_data %in% c(3, 4)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  group_by(participant_id, experiment_data) %>%
+  summarise(reaction_time = mean(reaction_time, na.rm = TRUE),
+            .groups = "drop") %>% # 平均を計算
+  pivot_wider(names_from = experiment_data, values_from = reaction_time,
+              names_prefix = "rt_") %>%
+  filter(!is.na(rt_3), !is.na(rt_4))  # 両方のデータがあるペアのみ対象
+
+# 結果
+cor_result <- cor.test(exp3exp4_cleaned_rt_data$rt_3,
+                       exp3exp4_cleaned_rt_data$rt_4, method = "pearson")
+print(cor_result)
+
+
+
+# NASA-RTLX
+exp3exp4_cleaned_nasa_rtlx_data <- cleaned_nasa_rtlx %>%
+  filter(nasa_rtlx_data %in% c(3, 4)) %>%
+  select(participant_id, nasa_rtlx_data, nasa_rtlx) %>%
+  group_by(participant_id, nasa_rtlx_data) %>%
+  summarise(nasa_rtlx = mean(nasa_rtlx, na.rm = TRUE),
+            .groups = "drop") %>% # 平均を計算
+  pivot_wider(names_from = nasa_rtlx_data, values_from = nasa_rtlx,
+              names_prefix = "nasa_rtlx_") %>%
+  filter(!is.na(nasa_rtlx_3), !is.na(nasa_rtlx_4))  # 両方のデータがあるペアのみ対象
+
+# 結果
+exp3exp4_cor_nasa_rtlx_result <- cor.test(
+  exp3exp4_cleaned_nasa_rtlx_data$nasa_rtlx_3,
+  exp3exp4_cleaned_nasa_rtlx_data$nasa_rtlx_4, method = "pearson")
+print(exp3exp4_cor_nasa_rtlx_result)
+```
+
+##### 5.1.2.2. グラフ
+
+```{r, fig.show='hold', fig.height=4}
+pairs.panels(
+  exp3exp4_cleaned_rt_data[, c("rt_3", "rt_4")], 
+  method = "pearson", # 相関係数の計算方法（ピアソン）
+  hist.col = "gray", # ヒストグラムの色
+  density = TRUE, # 密度プロットを表示
+  ellipses = TRUE, # 信頼楕円を描画
+  lm = TRUE # 回帰直線を追加
+)
+
+pairs.panels(
+  exp3exp4_cleaned_nasa_rtlx_data[, c("nasa_rtlx_3", "nasa_rtlx_4")], 
+  method = "pearson", # 相関係数の計算方法（ピアソン）
+  hist.col = "gray", # ヒストグラムの色
+  density = TRUE, # 密度プロットを表示
+  ellipses = TRUE, # 信頼楕円を描画
+  lm = TRUE # 回帰直線を追加
+)
+```
+
+
+### 5.2.   情報表示デザイン内の一貫性
+
+#### 5.2.0.   データの抽出
+
+```{r}
+# 回答時間のデータ
+cleaned_rt_data <- DataList %>%
+  # 回答時間データの取得・型変換
+  filter(experiment_data %in% c(1, 2, 3, 4), experiment_data != 9,
+         !is.na(reaction_time)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  mutate(reaction_time = suppressWarnings(as.numeric(reaction_time))) %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age), !is.na(reaction_time)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+# nasa-rtlxのデータ
+cleaned_nasa_rtlx <- DataList %>%
+  # 無効データの除外
+  filter(!nasa_rtlx_data %in% c("null", 9)) %>%
+  # NASA-RTLX スコアの計算
+  mutate(nasa_rtlx = rowMeans(across(mental_demand:frustration),
+                              na.rm = TRUE)) %>%
+  # アンケートデータ（年齢）の結合
+  left_join(
+    survey_d %>%
+      select(participant_id, age),
+    by = "participant_id"
+  ) %>%
+  # 有効データの抽出
+  filter(!is.na(age), !is.na(nasa_rtlx)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+```
+
+#### 5.2.1.   折り畳み構造(実験1＆実験3)
+
+相関分析
+
+```{r}
+# 回答時間
+exp1exp3_cleaned_rt_data <- cleaned_rt_data %>%
+  filter(experiment_data %in% c(1, 3)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  group_by(participant_id, experiment_data) %>%
+  summarise(reaction_time = mean(reaction_time, na.rm = TRUE),
+            .groups = "drop") %>% # 平均を計算
+  pivot_wider(names_from = experiment_data, values_from = reaction_time,
+              names_prefix = "rt_") %>%
+  filter(!is.na(rt_1), !is.na(rt_3))  # 両方のデータがあるペアのみ対象
+
+# 結果
+cor_result <- cor.test(exp1exp3_cleaned_rt_data$rt_1,
+                       exp1exp3_cleaned_rt_data$rt_3,
+                       method = "pearson")
+print(cor_result)
+
+
+
+# NASA-RTLX
+exp1exp3_cleaned_nasa_rtlx_data <- cleaned_nasa_rtlx %>%
+  filter(nasa_rtlx_data %in% c(1, 3)) %>%
+  select(participant_id,
+         nasa_rtlx_data,
+         nasa_rtlx) %>%
+  group_by(participant_id,
+           nasa_rtlx_data) %>%
+  summarise(nasa_rtlx = mean(nasa_rtlx,
+                             na.rm = TRUE),
+            .groups = "drop") %>% # 平均を計算
+  pivot_wider(names_from = nasa_rtlx_data,
+              values_from = nasa_rtlx,
+              names_prefix = "nasa_rtlx_") %>%
+  filter(!is.na(nasa_rtlx_1),
+         !is.na(nasa_rtlx_3))  # 両方のデータがあるペアのみ対象
+
+# 結果
+exp1exp3_cor_nasa_rtlx_result <- cor.test(
+  exp1exp3_cleaned_nasa_rtlx_data$nasa_rtlx_1,
+  exp1exp3_cleaned_nasa_rtlx_data$nasa_rtlx_3,
+  method = "pearson")
+print(exp1exp3_cor_nasa_rtlx_result)
+```
+
+##### 5.2.1.2. グラフ
+
+```{r, fig.show='hold', fig.height=4}
+pairs.panels(
+  exp1exp3_cleaned_rt_data[, c("rt_1",
+                               "rt_3")], 
+  method = "pearson", # 相関係数の計算方法（ピアソン）
+  hist.col = "gray", # ヒストグラムの色
+  density = TRUE, # 密度プロットを表示
+  ellipses = TRUE, # 信頼楕円を描画
+  lm = TRUE # 回帰直線を追加
+)
+
+pairs.panels(
+  exp1exp3_cleaned_nasa_rtlx_data[, c("nasa_rtlx_1",
+                                      "nasa_rtlx_3")], 
+  method = "pearson", # 相関係数の計算方法（ピアソン）
+  hist.col = "gray", # ヒストグラムの色
+  density = TRUE, # 密度プロットを表示
+  ellipses = TRUE, # 信頼楕円を描画
+  lm = TRUE # 回帰直線を追加
+)
+```
+
+#### 5.2.2.   一覧表示構造(実験2＆実験4)
+
+相関分析
+
+```{r}
+# 回答時間
+exp2exp4_cleaned_rt_data <- cleaned_rt_data %>%
+  filter(experiment_data %in% c(2, 4)) %>%
+  select(participant_id, experiment_data,
+         reaction_time) %>%
+  group_by(participant_id,
+           experiment_data) %>%
+  summarise(reaction_time = mean(reaction_time,
+                                 na.rm = TRUE),
+            .groups = "drop") %>% # 平均を計算
+  pivot_wider(names_from = experiment_data,
+              values_from = reaction_time,
+              names_prefix = "rt_") %>%
+  filter(!is.na(rt_2), !is.na(rt_4))  # 両方のデータがあるペアのみ対象
+
+# 結果
+cor_result <- cor.test(exp2exp4_cleaned_rt_data$rt_2,
+                       exp2exp4_cleaned_rt_data$rt_4,
+                       method = "pearson")
+print(cor_result)
+
+
+
+# NASA-RTLX
+exp2exp4_cleaned_nasa_rtlx_data <- cleaned_nasa_rtlx %>%
+  filter(nasa_rtlx_data %in% c(2, 4)) %>%
+  select(participant_id,
+         nasa_rtlx_data,
+         nasa_rtlx) %>%
+  group_by(participant_id, nasa_rtlx_data) %>%
+  summarise(nasa_rtlx = mean(nasa_rtlx,
+                             na.rm = TRUE),
+            .groups = "drop") %>% # 平均を計算
+  pivot_wider(names_from = nasa_rtlx_data,
+              values_from = nasa_rtlx,
+              names_prefix = "nasa_rtlx_") %>%
+  filter(!is.na(nasa_rtlx_2), !is.na(nasa_rtlx_4))  # 両方のデータがあるペアのみ対象
+
+# 結果
+exp2exp4_cor_nasa_rtlx_result <-
+  cor.test(exp2exp4_cleaned_nasa_rtlx_data$nasa_rtlx_2,
+           exp2exp4_cleaned_nasa_rtlx_data$nasa_rtlx_4,
+           method = "pearson")
+print(exp2exp4_cor_nasa_rtlx_result)
+```
+
+グラフで分布確認
+
+##### 5.2.2.2. グラフ
+
+```{r, fig.show='hold', fig.height=4}
+pairs.panels(
+  exp2exp4_cleaned_rt_data[, c("rt_2", "rt_4")], 
+  method = "pearson", # 相関係数の計算方法（ピアソン）
+  hist.col = "gray", # ヒストグラムの色
+  density = TRUE, # 密度プロットを表示
+  ellipses = TRUE, # 信頼楕円を描画
+  lm = TRUE # 回帰直線を追加
+)
+
+pairs.panels(
+  cleaned_diff_nasa_rtlx[, c("nasa_rtlx_2", "nasa_rtlx_4")], 
+  method = "pearson", # 相関係数の計算方法（ピアソン）
+  hist.col = "gray", # ヒストグラムの色
+  density = TRUE, # 密度プロットを表示
+  ellipses = TRUE, # 信頼楕円を描画
+  lm = TRUE # 回帰直線を追加
+)
+```
+
+### 5.3.  デザインによる差分と表示方法
+
+#### 5.3.0. データの抽出
+
+```{r}
+# 回答時間のデータ
+cleaned_diff_rt_data <- DataList %>%
+  # 回答時間データの取得・型変換
+  filter(experiment_data %in% c(1, 2, 3, 4), experiment_data != 9,
+         !is.na(reaction_time)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  mutate(reaction_time = suppressWarnings(as.numeric(reaction_time))) %>%
+  # experiment_dataごとの回答時間を横持ちに変換
+  pivot_wider(names_from = experiment_data, values_from = reaction_time,
+              names_prefix = "rt_") %>%
+  # 回答時間の差分計算
+  mutate(
+    diff_rt_1_2 = rt_1 - rt_2,
+    diff_rt_3_4 = rt_3 - rt_4
+  )
+
+# NASA-RTLXのデータ
+cleaned_diff_nasa_rtlx <- DataList %>%
+  # 無効データの除外
+  filter(!nasa_rtlx_data %in% c("null", 9)) %>%
+  # NASA-RTLX スコアの計算
+  mutate(nasa_rtlx = rowMeans(across(mental_demand:frustration),
+                              na.rm = TRUE)) %>%
+  filter(nasa_rtlx_data %in% c(1, 2, 3, 4), nasa_rtlx_data != 9,
+         !is.na(nasa_rtlx)) %>%
+  select(participant_id, nasa_rtlx_data, nasa_rtlx) %>%
+  # nasa_rtlx_dataごとの回答時間を横持ちに変換
+  pivot_wider(names_from = nasa_rtlx_data, values_from = nasa_rtlx,
+              names_prefix = "nasa_rtlx_") %>%
+  # 回答時間の差分計算
+  mutate(
+    diff_nasa_rtlx_1_2 = nasa_rtlx_1 - nasa_rtlx_2,
+    diff_nasa_rtlx_3_4 = nasa_rtlx_3 - nasa_rtlx_4
+  )
+```
+
+#### 5.3.1. 相関分析
+
+相関分析
+
+```{r}
+# 回答時間
+# 結果
+cor_result <- cor.test(cleaned_diff_rt_data$diff_rt_1_2,
+                       cleaned_diff_rt_data$diff_rt_3_4,
+                       method = "pearson")
+print(cor_result)
+
+# NASA-RTLX
+# 結果
+cor_nasa_rtlx_result <- cor.test(cleaned_diff_nasa_rtlx$diff_nasa_rtlx_1_2,
+                                 cleaned_diff_nasa_rtlx$diff_nasa_rtlx_3_4,
+                                 method = "pearson")
+print(cor_nasa_rtlx_result)
+```
+
+#### 5.3.2. グラフ
+
+```{r, fig.show='hold', fig.height=7}
+pairs.panels(
+  cleaned_diff_rt_data[, c("diff_rt_1_2",
+                           "diff_rt_3_4")], 
+  method = "pearson", # 相関係数の計算方法（ピアソン）
+  hist.col = "gray", # ヒストグラムの色
+  density = TRUE, # 密度プロットを表示
+  ellipses = TRUE, # 信頼楕円を描画
+  lm = TRUE # 回帰直線を追加
+)
+
+pairs.panels(
+  cleaned_diff_nasa_rtlx[, c("diff_nasa_rtlx_1_2",
+                             "diff_nasa_rtlx_3_4")], 
+  method = "pearson", # 相関係数の計算方法（ピアソン）
+  hist.col = "gray", # ヒストグラムの色
+  density = TRUE, # 密度プロットを表示
+  ellipses = TRUE, # 信頼楕円を描画
+  lm = TRUE # 回帰直線を追加
+)
+```
+
+## 6. 事後分析
+
+データ数が予想以上に集まった為、贅沢に除外をして効果量を観測しやすくできそう
+
+除外処置 = 
+   1. 年齢の外れ値の除外 (18-75以外のデータ)
+   2. 誤回答の除外
+   2. 初回の回答以外の除外
+   3. Exp1, Exp2 の内、先にやった方以外の除外
+   4. Exp3, Exp4 の内、先にやった方以外の除外
+   5. 適切なサンプルサイズ内に収まる様にランダムなデータのみ使用
+　　
+考えられる分析
+   1. 誤回答の分析(回答項目の分布, RT分布, NASA分布)
+   2. 初回の回答だけを使用した分析
+   3. 有意な結果に対して、適切なサンプルサイズ内に収まる様にランダムなデータのみ使用した場合で有意差が出るのか
+
+#### 6.1. 誤回答の分析
+
+```{r}
+```
+
+#### 6.2. 時間とストレスの相関
+
+そもそも時間とストレス(NASA-RTLX)に相関があるのか
+```{r}
+# 回答時間のデータ
+cleaned_rt_data <- DataList %>%
+  # 回答時間データの取得・型変換
+  filter(experiment_data %in% c(1, 2, 3, 4), experiment_data != 9,
+         !is.na(reaction_time)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  mutate(reaction_time = suppressWarnings(as.numeric(reaction_time))) %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age), !is.na(reaction_time)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+# nasa-rtlxのデータ
+cleaned_nasa_rtlx <- DataList %>%
+  # 無効データの除外
+  filter(!nasa_rtlx_data %in% c("null", 9)) %>%
+  # NASA-RTLX スコアの計算
+  mutate(nasa_rtlx = rowMeans(across(mental_demand:frustration),
+                              na.rm = TRUE)) %>%
+  # アンケートデータ（年齢）の結合
+  left_join(
+    survey_d %>%
+      select(participant_id, age),
+    by = "participant_id"
+  ) %>%
+  # 有効データの抽出
+  filter(!is.na(age), !is.na(nasa_rtlx)) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+cleaned_all_data <- cleaned_nasa_rtlx %>%
+  left_join(
+    cleaned_rt_data %>% 
+      rename(experiment_reaction_time = reaction_time) %>%
+      select(participant_id, experiment_data, experiment_reaction_time),
+    by = c("participant_id", "nasa_rtlx_data" = "experiment_data")
+  )
+
+rt_nasa_rtlx_cor_result <- cor.test(cleaned_all_data$experiment_reaction_time,
+                       cleaned_all_data$nasa_rtlx,
+                       method = "pearson")
+print(rt_nasa_rtlx_cor_result)
+
+pairs.panels(
+  cleaned_all_data[, c("experiment_reaction_time",
+                           "nasa_rtlx")], 
+  method = "pearson", # 相関係数の計算方法（ピアソン）
+  hist.col = "gray", # ヒストグラムの色
+  density = TRUE, # 密度プロットを表示
+  ellipses = TRUE, # 信頼楕円を描画
+  lm = TRUE # 回帰直線を追加
+)
+
+# 相関楕円を描画するカスタム関数
+ellipse_plot <- function(data, mapping) {
+  ggplot(data, mapping) +
+    geom_point(alpha = 0.5) +
+    stat_ellipse(type = "t", level = 0.95, color = "red", linewidth = 1)  # `size` → `linewidth` に変更
+}
+# ggpairs に適用
+plot07_1 <- ggpairs(
+  cleaned_all_data[, c("experiment_reaction_time", "nasa_rtlx")], 
+  lower = list(continuous = wrap(ellipse_plot)),  # カスタム関数を適用
+  upper = list(continuous = wrap("cor", size = 5)),  # 相関係数を表示
+  diag = list(continuous = wrap("barDiag", fill = "gray70", color = "black", binwidth = 5)),  # `binwidth` を指定
+  labeller = as_labeller(c(
+    experiment_reaction_time = "手続き時間",
+    nasa_rtlx = "ストレス"
+  ))
+)
+
+plot07 <- ggpairs(
+  cleaned_all_data[, c("experiment_reaction_time", "nasa_rtlx")], 
+  lower = list(continuous = wrap("points", alpha = 0.5)),  # 散布図の透明度を調整
+  upper = list(continuous = wrap("cor", size = 5)),  # 相関係数を表示
+  diag = list(continuous = wrap("barDiag", fill = "gray70", color = "black")), # ヒストグラムを追加
+  labeller = as_labeller(c(
+    experiment_reaction_time = "手続き時間",
+    nasa_rtlx = "ストレス"
+  ))
+)
+plot07 <- plot07 + apa_theme
+plot07
+
+lm_model_rt_nasa_rtlx <- lm(experiment_reaction_time ~ nasa_rtlx, data = cleaned_all_data)
+rt_nasa_rtlx_summary <- summary(lm_model_rt_nasa_rtlx)
+
+
+rt_nasa_rtlx_p_value <- rt_nasa_rtlx_summary$coefficients["nasa_rtlx", "Pr(>|t|)"]  # 年齢のp値
+rt_nasa_rtlx_p_text <- paste0("p = ", signif(rt_nasa_rtlx_p_value, 3))  # p値を表示用にフォーマット
+
+plot08 <- ggplot(cleaned_all_data, aes(x = experiment_reaction_time, y = nasa_rtlx)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "#4dc4ff") +
+  labs(x = "手続き時間 (秒)", y = "主観的ストレス値", title = "手続き時間が増加するとストレスを感じるか") +
+  coord_cartesian(ylim = c(0, 100)) +
+  annotate("text",
+           x = max(cleaned_all_data$experiment_reaction_time),
+           y = max(cleaned_all_data$nasa_rtlx),
+           label = rt_nasa_rtlx_p_text,
+           hjust = 1,
+           vjust = 1,
+           size = 8,
+           color = "black") +
+  apa_theme
+print(plot08)
+
+mean(cleaned_all_data$experiment_reaction_time)
+```
+
+#### 6.2. 初回の回答だけを採用した分析
+
+##### 6.2.0. データ抽出
+
+```{r}
+# 回答時間のデータ
+# 初回データのリスト
+AllFirstExperimentRTFlags = RawDataList %>%
+  select(participant_id, experiment_data) %>%
+  # experiment_data が空やNAでないデータを対象にする
+  filter(experiment_data %in% c(1, 2, 3, 4),
+         !is.na(experiment_data) & experiment_data != "") %>%
+  group_by(participant_id) %>%
+  # 最初に出現した experiment_data を取得
+  slice_head(n = 1) %>%
+  ungroup()
+# 初回データのみの回答時間データ
+onliyFirst_cleaned_rt_data <- DataList %>%
+  # 回答時間データの取得・型変換
+  filter(experiment_data %in% c(1, 2, 3, 4),
+         experiment_data != 9, !is.na(reaction_time)) %>%
+  select(participant_id, experiment_data, reaction_time) %>%
+  mutate(reaction_time = suppressWarnings(as.numeric(reaction_time))) %>%
+  # アンケートデータの取得・年齢の型変換
+  left_join(DataList %>%
+              filter(!is.na(survey_data)) %>%
+              select(participant_id, survey_data, response) %>%
+              pivot_wider(names_from = survey_data, values_from = response) %>%
+              mutate(age = ifelse("age" %in% colnames(.),
+                                  as.numeric(ifelse(grepl("[^0-9]", age),
+                                                    extract_number(age)), NA))),
+            by = "participant_id") %>%
+  # 有効データのフィルタリング
+  filter(!is.na(age), !is.na(reaction_time)) %>%
+  # experiment_data が FirstExperimentFlags のものと一致する行のみを残す
+  inner_join(AllFirstExperimentRTFlags, by = c("participant_id", "experiment_data")) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+# nasa-rtlxのデータ
+# 初回データのリスト
+AllFirstExperimentNASAFlags = RawDataList %>%
+  select(participant_id, nasa_rtlx_data) %>%
+  # 無効データの除外
+  filter(nasa_rtlx_data %in% c(1, 2, 3, 4),
+         !nasa_rtlx_data %in% c("null", 9)) %>%
+  # nasa_rtlx_data が空やNAでないデータを対象にする
+  filter(!is.na(nasa_rtlx_data) & nasa_rtlx_data != "") %>%
+  group_by(participant_id) %>%
+  # 最初に出現した nasa_rtlx_data を取得
+  slice_head(n = 1) %>%
+  ungroup()
+# 初回データのみのnasa-rtlxデータ
+onliyFirst_cleaned_nasa_rtlx <- DataList %>%
+  # 無効データの除外
+  filter(!nasa_rtlx_data %in% c("null", 9)) %>%
+  # NASA-RTLX スコアの計算
+  mutate(nasa_rtlx = rowMeans(across(mental_demand:frustration),
+                              na.rm = TRUE)) %>%
+  # アンケートデータ（年齢）の結合
+  left_join(
+    survey_d %>%
+      select(participant_id, age),
+    by = "participant_id"
+  ) %>%
+  # 有効データの抽出
+  filter(!is.na(age), !is.na(nasa_rtlx)) %>%
+  # experiment_data が FirstExperimentFlags のものと一致する行のみを残す
+  inner_join(AllFirstExperimentNASAFlags, by = c("participant_id", "nasa_rtlx_data")) %>%
+  # 年齢グループの作成
+  mutate(age_group = ifelse(age >= mean(survey_d_filterd_age$age), "2.平均以上", "1.平均未満"))
+
+onliyFirst_cleaned_all_data <- onliyFirst_cleaned_nasa_rtlx %>%
+  left_join(
+    onliyFirst_cleaned_rt_data %>% 
+      rename(experiment_reaction_time = reaction_time) %>%
+      select(participant_id, experiment_data, experiment_reaction_time),
+    by = c("participant_id", "nasa_rtlx_data" = "experiment_data")
+  )
+```
+
+##### 6.2.1. 年齢
+
+###### 6.2.1.1. T検定 
+
+```{r}
+
+```
+
+####### 6.2.1.1.1. 簡単な課題
+
+```{r}
+
+```
+
+####### 6.2.1.1.2. 難しい課題
+
+```{r}
+
+```
+
+###### 6.2.1.2. 回帰
+
+```{r}
+onliyFirst_lm_model_rt <- lm(experiment_reaction_time ~ age,
+                  data = onliyFirst_cleaned_all_data)
+summary(onliyFirst_lm_model_rt)
+
+plot_onliyFirst_01 <- ggplot(cleaned_rt_data, aes(x = age, y = reaction_time)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "#4dc4ff") +
+  labs(x = "年齢", y = "回答時間 (秒)", title = "年齢と回答時間の関係") +
+  apa_theme
+print(plot_onliyFirst_01)
+```
+
+####### 6.2.1.1.1. 簡単な課題
+
+```{r}
+
+```
+
+####### 6.2.1.1.1. 難しい課題
+
+```{r}
+
+```
+
+##### 6.2.2. デザイン
+
+```{r}
+
+```
+
+##### 6.2.3. 年齢＋デザイン
+
+###### 6.2.3.1. T検定
+
+平均年齢以上の１回目の平均と平均年齢以下の１回目の平均の差の比較
+
+```{r}
+```
+
+###### 6.2.3.1. 回帰
+
+```{r}
+
+```
+
+#### 6.3. 適切なサンプルサイズでランダム抽出して分析
+
+```{r}
+```
+
