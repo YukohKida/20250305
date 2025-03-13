@@ -37,3 +37,7 @@
 ## 実験のURL
 
 https://yukohkida.github.io/20250305/experiment.html
+
+## 実験データ
+
+https://osf.io/5jqgv/
