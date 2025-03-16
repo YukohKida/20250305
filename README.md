@@ -41,3 +41,7 @@ https://yukohkida.github.io/20250305/experiment.html
 ## 実験データ
 
 https://osf.io/5jqgv/
+
+## ファイル解説
+
+1. Rmarkdown のPDF出力版 : インターン_JpLife_RARA_分析コード_20250305.pdf
