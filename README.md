@@ -45,3 +45,4 @@ https://osf.io/5jqgv/
 ## ファイル解説
 
 1. Rmarkdown のPDF出力版 : インターン_JpLife_RARA_分析コード_20250305.pdf
+2. 分析で使用した Rmarkdown : インターン_JpLife_RARA_施策結果生成コード_20250305.Rmd
