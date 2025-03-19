@@ -9,8 +9,8 @@
 実験では、仮想のオンライン手続きを体験してもらい、手続きにかかった時間とその手続きの主観的な使いやすさ評価するタスクを行った。
 
 ## インターンでの流れ
-![image](https://github.com/user-attachments/assets/17ff8b25-aca7-4cce-9e34-18a40663ee1f)
 
+![image](https://github.com/user-attachments/assets/17ff8b25-aca7-4cce-9e34-18a40663ee1f)
 
 ## 実験内容
 
