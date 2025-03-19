@@ -1,4 +1,3 @@
-![image](https://github.com/user-attachments/assets/0f0a8ab9-4f58-4434-a74f-a25667395dce)20250305
 # かんぽ生命保険 × 立命館大学 博士人材インターン　「マイページデザインの検討」
 
 ## 概要
